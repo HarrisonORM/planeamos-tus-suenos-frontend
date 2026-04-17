@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+/* Tema de marca */
+@theme {
+  --color-dorado:          #C9A84C;
+  --color-dorado-claro:    #F5EDD6;
+  --color-dorado-oscuro:   #A67C2E;
+
+  --color-negro-elegante:  #1A1A1A;
+  --color-negro-suave:     #2C2C2C;
+
+  --color-blanco-calido:   #FAF7F2;
+  --color-blanco-puro:     #FFFFFF;
+
+  --color-gris-suave:      #F0F0F0;
+  --color-gris-texto:      #6B6B6B;
+  --color-gris-borde:      #CCCCCC;
+
+  --font-titulo: "Cormorant Garamond", Georgia, serif;
+  --font-cuerpo: "Jost", sans-serif;
+
+  --radius-tarjeta: 16px;
+  --radius-boton:   8px;
+
+  --shadow-dorada:   0 4px 24px rgba(201, 168, 76, 0.25);
+  --shadow-elegante: 0 8px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Estilos base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-cuerpo);
+  background-color: var(--color-blanco-calido);
+  color: var(--color-negro-suave);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-titulo);
+  line-height: 1.2;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}

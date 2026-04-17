@@ -1,0 +1,27 @@
+# ─────────────────────────────────────────────────────────────
+# ARCHIVOS QUE GIT DEBE IGNORAR — Frontend
+# ─────────────────────────────────────────────────────────────
+
+# ── Librerías descargadas ──
+# Se regeneran con "npm install", pesan mucho
+node_modules/
+
+# ── Archivos generados por Next.js ──
+# Se regeneran cada vez que ejecutas el proyecto
+.next/
+out/
+
+# ── Contraseñas y claves secretas ──
+# NUNCA deben subirse a GitHub
+.env
+.env.local
+.env.development
+.env.production
+
+# ── Archivos del sistema operativo ──
+.DS_Store
+Thumbs.db
+
+# ── Archivos temporales del editor ──
+*.swp
+*.swo
