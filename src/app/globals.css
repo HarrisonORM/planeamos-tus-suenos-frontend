@@ -4,9 +4,13 @@
 
 /* Tema de marca */
 @theme {
-  --color-dorado:          #C9A84C;
-  --color-dorado-claro:    #F5EDD6;
-  --color-dorado-oscuro:   #A67C2E;
+  --color-verde:           #748068;
+  --color-verde-claro:     #E8EDDF;
+  --color-verde-oscuro:    #5C6852;
+
+  --color-durazno:         #E2C8B4;
+  --color-durazno-claro:   #F5EDE5;
+  --color-durazno-oscuro:  #C4A48E;
 
   --color-negro-elegante:  #1A1A1A;
   --color-negro-suave:     #2C2C2C;
@@ -16,7 +20,7 @@
 
   --color-gris-suave:      #F0F0F0;
   --color-gris-texto:      #6B6B6B;
-  --color-gris-borde:      #CCCCCC;
+  --color-gris-borde:      #D4D4D4;
 
   --font-titulo: "Cormorant Garamond", Georgia, serif;
   --font-cuerpo: "Jost", sans-serif;
@@ -24,39 +28,65 @@
   --radius-tarjeta: 16px;
   --radius-boton:   8px;
 
-  --shadow-dorada:   0 4px 24px rgba(201, 168, 76, 0.25);
+  --shadow-suave:    0 4px 24px rgba(116, 128, 104, 0.2);
   --shadow-elegante: 0 8px 40px rgba(0, 0, 0, 0.12);
 }
 
-/* Estilos base */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* Estilos base — dentro de @layer base para que las
+   utilidades de Tailwind (@layer utilities) siempre ganen */
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  body {
+    font-family: var(--font-cuerpo);
+    background-color: var(--color-blanco-calido);
+    color: var(--color-negro-suave);
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-titulo);
+    line-height: 1.2;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}
+.contenedor-principal {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
-html {
-  scroll-behavior: smooth;
+@media (min-width: 640px) {
+  .contenedor-principal {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
 }
 
-body {
-  font-family: var(--font-cuerpo);
-  background-color: var(--color-blanco-calido);
-  color: var(--color-negro-suave);
-}
-
-h1, h2, h3 {
-  font-family: var(--font-titulo);
-  line-height: 1.2;
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
+@media (min-width: 1024px) {
+  .contenedor-principal {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
