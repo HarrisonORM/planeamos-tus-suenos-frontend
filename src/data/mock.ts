@@ -334,63 +334,134 @@ export const portafolio = [
 export const locaciones = [
     {
         id: 1,
-        nombre: "Hacienda El Paraíso",
-        descripcion: "Hacienda tradicional con amplios jardines y capilla propia.",
-        municipio: "Guarne",
+        nombre: "Zona E — El Establo",
+        descripcion:
+            "Espíritu rústico y cálido estilo granero. "
+            + "Lago y bosque de eucaliptos para "
+            + "ceremonias al aire libre. "
+            + "287.000 m² de entretenimiento.",
+        municipio: "Llanogrande",
         capacidad: 250,
-        precio: "$6M - $12M",
+        precio: "Consultar",
         imagen: IMG.hacienda1,
-        tiposEvento: ["boda", "quinceañera"],
+        tiposEvento: ["boda", "quinceañera", "corporativo"],
     },
     {
         id: 2,
-        nombre: "Llanogrande Gardens",
-        descripcion: "Espacio al aire libre con vista panorámica al valle.",
-        municipio: "Rionegro",
-        capacidad: 150,
-        precio: "$4M - $8M",
+        nombre: "Zona E — Bali",
+        descripcion:
+            "Espejo de agua, detalles en madera y "
+            + "vegetación exuberante que transporta "
+            + "al ambiente exótico de Bali.",
+        municipio: "Llanogrande",
+        capacidad: 200,
+        precio: "Consultar",
         imagen: IMG.hacienda2,
         tiposEvento: ["boda", "corporativo"],
     },
     {
         id: 3,
-        nombre: "Salón Los Rosales",
-        descripcion: "Salón cubierto con gran aforo y zona VIP.",
-        municipio: "Rionegro",
-        capacidad: 300,
-        precio: "$3M - $7M",
+        nombre: "Zona E — Marrakech",
+        descripcion:
+            "Evoca la esencia del desierto marroquí "
+            + "en un ambiente exclusivo. Detalles "
+            + "arquitectónicos contemporáneos "
+            + "con vista al lago.",
+        municipio: "Llanogrande",
+        capacidad: 200,
+        precio: "Consultar",
         imagen: IMG.salon1,
-        tiposEvento: ["quinceañera", "fiesta", "corporativo"],
+        tiposEvento: ["boda", "corporativo", "fiesta"],
     },
     {
         id: 4,
-        nombre: "Finca Los Olivos",
-        descripcion: "Finca rústica con lago privado y zonas verdes extensas.",
-        municipio: "Marinilla",
-        capacidad: 180,
-        precio: "$5M - $9M",
+        nombre: "Villa Celeste",
+        descripcion:
+            "Imponente salón rodeado de naturaleza. "
+            + "Se adapta a todos los estilos: boho, "
+            + "moderno, elegante, campestre. "
+            + "Mobiliario incluido hasta 200 personas.",
+        municipio: "Llanogrande",
+        capacidad: 600,
+        precio: "Consultar",
         imagen: IMG.hacienda3,
-        tiposEvento: ["boda", "fiesta"],
+        tiposEvento: [
+            "boda", "quinceañera",
+            "corporativo", "fiesta",
+        ],
     },
     {
         id: 5,
-        nombre: "Hacienda La Pradera",
-        descripcion: "Hacienda colonial restaurada con arquitectura antioqueña.",
-        municipio: "La Ceja",
+        nombre: "Montana",
+        descripcion:
+            "Espacio campestre con vistas "
+            + "panorámicas al valle del Oriente "
+            + "Antioqueño. Ambiente natural y "
+            + "exclusivo para eventos.",
+        municipio: "Llanogrande",
         capacidad: 200,
-        precio: "$7M - $14M",
+        precio: "Consultar",
         imagen: IMG.hacienda1,
-        tiposEvento: ["boda", "quinceañera"],
+        tiposEvento: ["boda", "fiesta"],
     },
     {
         id: 6,
-        nombre: "Villa del Río",
-        descripcion: "Villa moderna con salón cristal panorámico y terraza.",
-        municipio: "El Retiro",
-        capacidad: 120,
-        precio: "$5M - $10M",
+        nombre: "Zelavi",
+        descripcion:
+            "Restaurante de alta cocina con fusión "
+            + "peruana, italiana y mexicana. "
+            + "Salón privado disponible para "
+            + "eventos íntimos y celebraciones.",
+        municipio: "Rionegro",
+        capacidad: 80,
+        precio: "Consultar",
         imagen: IMG.hacienda2,
+        tiposEvento: ["fiesta", "corporativo"],
+    },
+    {
+        id: 7,
+        nombre: "Granate Eventos",
+        descripcion:
+            "Espacio campestre con estilo propio, "
+            + "hermosos jardines y parqueadero. "
+            + "Ubicado sobre la glorieta principal "
+            + "del aeropuerto José María Córdova.",
+        municipio: "Rionegro",
+        capacidad: 300,
+        precio: "Consultar",
+        imagen: IMG.salon1,
+        tiposEvento: [
+            "boda", "quinceañera",
+            "corporativo", "fiesta",
+        ],
+    },
+    {
+        id: 8,
+        nombre: "Hotel Lagoon Llanogrande",
+        descripcion:
+            "Hotel 5 estrellas con entorno romántico "
+            + "frente al lago. Restaurante gourmet, "
+            + "piscina climatizada y espacios "
+            + "para bodas y eventos corporativos.",
+        municipio: "Rionegro",
+        capacidad: 250,
+        precio: "Consultar",
+        imagen: IMG.hacienda3,
         tiposEvento: ["boda", "corporativo"],
+    },
+    {
+        id: 9,
+        nombre: "Imperial Eventos Campestre",
+        descripcion:
+            "Jardines al aire libre y salón que "
+            + "combina estilo rústico con lo moderno. "
+            + "Incluye capilla, pista de baile, "
+            + "banquete, fotografía y decoración.",
+        municipio: "Llanogrande",
+        capacidad: 500,
+        precio: "Consultar",
+        imagen: IMG.hacienda1,
+        tiposEvento: ["boda", "quinceañera"],
     },
 ];
 
