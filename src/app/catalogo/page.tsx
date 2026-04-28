@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EncabezadoPagina
     from "@/components/ui/EncabezadoPagina";
-import { productosAlquiler } from "@/data/mock";
+import { getProductos } from "@/lib/api";
 import {
     formatearPrecio,
     etiquetaCategoria,
@@ -28,13 +28,32 @@ export default function PaginaCatalogo() {
     const [filtroActivo, setFiltroActivo] = useState(
         "todos"
     );
+    const [productos, setProductos] = useState<any[]>([]);
+    const [cargando, setCargando] = useState(true);
+    const [error, setError] = useState("");
 
-    const productosFiltrados =
-        filtroActivo === "todos"
-            ? productosAlquiler
-            : productosAlquiler.filter(
-                (p) => p.categoria === filtroActivo
-            );
+    useEffect(() => {
+        setCargando(true);
+        setError("");
+
+        const categoria =
+            filtroActivo === "todos"
+                ? undefined
+                : filtroActivo;
+
+        getProductos(categoria)
+            .then((data) => {
+                setProductos(data);
+                setCargando(false);
+            })
+            .catch(() => {
+                setError(
+                    "No se pudieron cargar los productos. "
+                    + "Verifica que el backend esté activo."
+                );
+                setCargando(false);
+            });
+    }, [filtroActivo]);
 
     const estiloFiltroBase =
         "px-6 py-2.5 rounded-full font-cuerpo "
@@ -56,8 +75,7 @@ export default function PaginaCatalogo() {
                 titulo="Catálogo"
                 subtitulo={
                     "Mobiliario, menaje, cristalería, "
-                    + "sonido e iluminación para tu evento. "
-                    + "Todo disponible para alquiler."
+                    + "sonido e iluminación para tu evento."
                 }
             />
 
@@ -102,181 +120,209 @@ export default function PaginaCatalogo() {
             {/* Productos */}
             <section className="pb-24 bg-blanco-calido">
                 <div className="contenedor-principal">
-                    <div
-                        className={
-                            "grid grid-cols-1 "
-                            + "md:grid-cols-2 "
-                            + "lg:grid-cols-3 gap-6"
-                        }
-                    >
-                        {productosFiltrados.map((producto) => (
-                            <div
-                                key={producto.id}
-                                className={
-                                    "bg-blanco-puro "
-                                    + "rounded-tarjeta "
-                                    + "overflow-hidden "
-                                    + "border border-durazno/20 "
-                                    + "shadow-suave "
-                                    + "hover:shadow-elegante "
-                                    + "hover:-translate-y-1 "
-                                    + "transition-all duration-300 "
-                                    + "flex flex-col"
-                                }
-                            >
-                                {/* Imagen */}
+
+                    {/* Estado de carga */}
+                    {cargando && (
+                        <p
+                            className={
+                                "text-center font-cuerpo "
+                                + "text-gris-texto py-20"
+                            }
+                        >
+                            Cargando productos...
+                        </p>
+                    )}
+
+                    {/* Error */}
+                    {error && (
+                        <p
+                            className={
+                                "text-center font-cuerpo "
+                                + "text-red-500 py-20"
+                            }
+                        >
+                            {error}
+                        </p>
+                    )}
+
+                    {/* Lista de productos */}
+                    {!cargando && !error && (
+                        <div
+                            className={
+                                "grid grid-cols-1 "
+                                + "md:grid-cols-2 "
+                                + "lg:grid-cols-3 gap-6"
+                            }
+                        >
+                            {productos.map((producto: any) => (
                                 <div
+                                    key={producto.id}
                                     className={
-                                        "h-52 overflow-hidden "
-                                        + "relative group"
+                                        "bg-blanco-puro "
+                                        + "rounded-tarjeta "
+                                        + "overflow-hidden "
+                                        + "border border-durazno/20 "
+                                        + "shadow-suave "
+                                        + "hover:shadow-elegante "
+                                        + "hover:-translate-y-1 "
+                                        + "transition-all "
+                                        + "duration-300 "
+                                        + "flex flex-col"
                                     }
                                 >
-                                    <img
-                                        src={producto.imagen}
-                                        alt={producto.nombre}
-                                        className={
-                                            "w-full h-full "
-                                            + "object-cover "
-                                            + "transition-transform "
-                                            + "duration-500 "
-                                            + "group-hover:scale-105"
-                                        }
-                                    />
                                     <div
                                         className={
-                                            "absolute top-4 left-4"
+                                            "h-52 overflow-hidden "
+                                            + "relative group"
                                         }
                                     >
-                                        <span
+                                        <img
+                                            src={producto.imagen}
+                                            alt={producto.nombre}
                                             className={
-                                                "inline-block "
-                                                + "bg-blanco-calido/90 "
-                                                + "backdrop-blur-sm "
-                                                + "text-negro-elegante "
-                                                + "font-cuerpo text-xs "
-                                                + "tracking-wider "
-                                                + "uppercase px-3 py-1 "
-                                                + "rounded-full"
+                                                "w-full h-full "
+                                                + "object-cover "
+                                                + "transition-transform "
+                                                + "duration-500 "
+                                                + "group-hover:scale-105"
+                                            }
+                                        />
+                                        <div
+                                            className={
+                                                "absolute top-4 left-4"
                                             }
                                         >
-                                            {etiquetaCategoria(
-                                                producto.categoria
-                                            )}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {/* Info */}
-                                <div
-                                    className={
-                                        "p-5 flex flex-col flex-1"
-                                    }
-                                >
-                                    <h3
-                                        className={
-                                            "font-titulo text-xl "
-                                            + "text-negro-elegante "
-                                            + "mb-2"
-                                        }
-                                    >
-                                        {producto.nombre}
-                                    </h3>
-                                    <p
-                                        className={
-                                            "font-cuerpo text-sm "
-                                            + "text-gris-texto "
-                                            + "leading-relaxed "
-                                            + "mb-4 flex-1"
-                                        }
-                                    >
-                                        {producto.descripcion}
-                                    </p>
-
-                                    {/* Tipos de evento */}
-                                    <div
-                                        className={
-                                            "flex flex-wrap gap-1.5 "
-                                            + "mb-4"
-                                        }
-                                    >
-                                        {producto.tiposEvento.map(
-                                            (tipo) => (
-                                                <span
-                                                    key={tipo}
-                                                    className={
-                                                        "font-cuerpo "
-                                                        + "text-[10px] "
-                                                        + "tracking-wider "
-                                                        + "uppercase "
-                                                        + "bg-verde-claro "
-                                                        + "text-verde-oscuro "
-                                                        + "px-2 py-0.5 "
-                                                        + "rounded-full"
-                                                    }
-                                                >
-                                                    {tipo}
-                                                </span>
-                                            )
-                                        )}
-                                    </div>
-
-                                    {/* Precio */}
-                                    <div
-                                        className={
-                                            "flex items-end "
-                                            + "justify-between "
-                                            + "pt-4 border-t "
-                                            + "border-durazno/20"
-                                        }
-                                    >
-                                        <div>
-                                            <p
+                                            <span
                                                 className={
-                                                    "text-[10px] "
-                                                    + "text-gris-texto "
-                                                    + "uppercase "
-                                                    + "tracking-wider mb-1"
+                                                    "inline-block "
+                                                    + "bg-blanco-calido/90 "
+                                                    + "backdrop-blur-sm "
+                                                    + "text-negro-elegante "
+                                                    + "font-cuerpo text-xs "
+                                                    + "tracking-wider "
+                                                    + "uppercase px-3 py-1 "
+                                                    + "rounded-full"
                                                 }
                                             >
-                                                Desde
-                                            </p>
-                                            <p
-                                                className={
-                                                    "font-titulo text-xl "
-                                                    + "text-negro-elegante"
-                                                }
-                                            >
-                                                {formatearPrecio(
-                                                    producto.precio
+                                                {etiquetaCategoria(
+                                                    producto.categoria
                                                 )}
-                                                <span
-                                                    className={
-                                                        "font-cuerpo "
-                                                        + "text-xs "
-                                                        + "text-gris-texto "
-                                                        + "ml-1"
-                                                    }
-                                                >
-                                                    {producto.unidad}
-                                                </span>
-                                            </p>
+                                            </span>
                                         </div>
-                                        <span
+                                    </div>
+
+                                    <div
+                                        className={
+                                            "p-5 flex flex-col flex-1"
+                                        }
+                                    >
+                                        <h3
                                             className={
-                                                "text-verde text-sm "
-                                                + "font-cuerpo font-medium "
-                                                + "hover:text-verde-oscuro "
-                                                + "transition-colors "
-                                                + "cursor-pointer"
+                                                "font-titulo text-xl "
+                                                + "text-negro-elegante "
+                                                + "mb-2"
                                             }
                                         >
-                                            Reservar →
-                                        </span>
+                                            {producto.nombre}
+                                        </h3>
+                                        <p
+                                            className={
+                                                "font-cuerpo text-sm "
+                                                + "text-gris-texto "
+                                                + "leading-relaxed "
+                                                + "mb-4 flex-1"
+                                            }
+                                        >
+                                            {producto.descripcion}
+                                        </p>
+
+                                        <div
+                                            className={
+                                                "flex flex-wrap "
+                                                + "gap-1.5 mb-4"
+                                            }
+                                        >
+                                            {producto.tipos_evento.map(
+                                                (tipo: string) => (
+                                                    <span
+                                                        key={tipo}
+                                                        className={
+                                                            "font-cuerpo "
+                                                            + "text-[10px] "
+                                                            + "tracking-wider "
+                                                            + "uppercase "
+                                                            + "bg-verde-claro "
+                                                            + "text-verde-oscuro "
+                                                            + "px-2 py-0.5 "
+                                                            + "rounded-full"
+                                                        }
+                                                    >
+                                                        {tipo}
+                                                    </span>
+                                                )
+                                            )}
+                                        </div>
+
+                                        <div
+                                            className={
+                                                "flex items-end "
+                                                + "justify-between "
+                                                + "pt-4 border-t "
+                                                + "border-durazno/20"
+                                            }
+                                        >
+                                            <div>
+                                                <p
+                                                    className={
+                                                        "text-[10px] "
+                                                        + "text-gris-texto "
+                                                        + "uppercase "
+                                                        + "tracking-wider "
+                                                        + "mb-1"
+                                                    }
+                                                >
+                                                    Desde
+                                                </p>
+                                                <p
+                                                    className={
+                                                        "font-titulo "
+                                                        + "text-xl "
+                                                        + "text-negro-elegante"
+                                                    }
+                                                >
+                                                    {formatearPrecio(
+                                                        producto.precio
+                                                    )}
+                                                    <span
+                                                        className={
+                                                            "font-cuerpo "
+                                                            + "text-xs "
+                                                            + "text-gris-texto "
+                                                            + "ml-1"
+                                                        }
+                                                    >
+                                                        {producto.unidad}
+                                                    </span>
+                                                </p>
+                                            </div>
+                                            <span
+                                                className={
+                                                    "text-verde text-sm "
+                                                    + "font-cuerpo "
+                                                    + "font-medium "
+                                                    + "hover:text-verde-oscuro "
+                                                    + "transition-colors "
+                                                    + "cursor-pointer"
+                                                }
+                                            >
+                                                Reservar →
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
         </div>

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EncabezadoPagina
     from "@/components/ui/EncabezadoPagina";
-import { portafolio } from "@/data/mock";
+import { getPortafolio } from "@/lib/api";
 import {
     etiquetaTipoEvento,
     formatearFecha,
@@ -21,13 +21,34 @@ export default function PaginaPortafolio() {
     const [filtroActivo, setFiltroActivo] = useState(
         "todos"
     );
+    const [eventos, setEventos] = useState<any[]>(
+        []
+    );
+    const [cargando, setCargando] = useState(true);
+    const [error, setError] = useState("");
 
-    const eventosFiltrados =
-        filtroActivo === "todos"
-            ? portafolio
-            : portafolio.filter(
-                (e) => e.tipoEvento === filtroActivo
-            );
+    useEffect(() => {
+        setCargando(true);
+        setError("");
+
+        const tipo =
+            filtroActivo === "todos"
+                ? undefined
+                : filtroActivo;
+
+        getPortafolio(tipo)
+            .then((data) => {
+                setEventos(data);
+                setCargando(false);
+            })
+            .catch(() => {
+                setError(
+                    "No se pudieron cargar los eventos. "
+                    + "Verifica que el backend esté activo."
+                );
+                setCargando(false);
+            });
+    }, [filtroActivo]);
 
     const estiloFiltroBase =
         "px-6 py-2.5 rounded-full font-cuerpo "
@@ -95,17 +116,29 @@ export default function PaginaPortafolio() {
             {/* Galería */}
             <section className="pb-24 bg-blanco-calido">
                 <div className="contenedor-principal">
-                    {eventosFiltrados.length === 0 ? (
+                    {cargando && (
                         <p
                             className={
                                 "text-center font-cuerpo "
                                 + "text-gris-texto py-20"
                             }
                         >
-                            No hay eventos en esta categoría
-                            todavía.
+                            Cargando eventos...
                         </p>
-                    ) : (
+                    )}
+
+                    {error && (
+                        <p
+                            className={
+                                "text-center font-cuerpo "
+                                + "text-red-500 py-20"
+                            }
+                        >
+                            {error}
+                        </p>
+                    )}
+
+                    {!cargando && !error && (
                         <div
                             className={
                                 "grid grid-cols-1 "
@@ -113,7 +146,7 @@ export default function PaginaPortafolio() {
                                 + "lg:grid-cols-3 gap-6"
                             }
                         >
-                            {eventosFiltrados.map((evento) => (
+                            {eventos.map((evento: any) => (
                                 <div
                                     key={evento.id}
                                     className={
@@ -124,7 +157,6 @@ export default function PaginaPortafolio() {
                                         + "h-[400px]"
                                     }
                                 >
-                                    {/* Imagen */}
                                     <img
                                         src={evento.imagen}
                                         alt={evento.titulo}
@@ -136,21 +168,15 @@ export default function PaginaPortafolio() {
                                             + "group-hover:scale-110"
                                         }
                                     />
-
-                                    {/* Overlay gradiente */}
                                     <div
                                         className={
                                             "absolute inset-0 "
                                             + "bg-gradient-to-t "
                                             + "from-negro-elegante/80 "
                                             + "via-negro-elegante/20 "
-                                            + "to-transparent "
-                                            + "transition-opacity "
-                                            + "duration-500"
+                                            + "to-transparent"
                                         }
                                     />
-
-                                    {/* Etiqueta tipo evento */}
                                     <div
                                         className={
                                             "absolute top-4 left-4"
@@ -167,12 +193,10 @@ export default function PaginaPortafolio() {
                                             }
                                         >
                                             {etiquetaTipoEvento(
-                                                evento.tipoEvento
+                                                evento.tipo_evento
                                             )}
                                         </span>
                                     </div>
-
-                                    {/* Info del evento */}
                                     <div
                                         className={
                                             "absolute bottom-0 "
