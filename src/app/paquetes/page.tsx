@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Animado from "@/components/ui/Animado";
 import EncabezadoPagina
     from "@/components/ui/EncabezadoPagina";
 import { paquetes } from "@/data/mock";
@@ -103,7 +104,7 @@ export default function PaginaPaquetes() {
                             + "lg:grid-cols-3 gap-8"
                         }
                     >
-                        {paquetesFiltrados.map((paquete) => {
+                        {paquetesFiltrados.map((paquete, index) => {
                             const dest = paquete.destacado;
 
                             const fondoCard = dest
@@ -149,17 +150,17 @@ export default function PaginaPaquetes() {
                                 + "hover:text-blanco-calido";
 
                             return (
-                                <div
-                                    key={paquete.id}
-                                    className={
-                                        "rounded-tarjeta "
-                                        + "overflow-hidden "
-                                        + "flex flex-col "
-                                        + "transition-all "
-                                        + "duration-300 "
-                                        + fondoCard
-                                    }
-                                >
+                                <Animado key={paquete.id} delay={index * 0.1}>
+                                    <div
+                                        className={
+                                            "rounded-tarjeta "
+                                            + "overflow-hidden "
+                                            + "flex flex-col "
+                                            + "transition-all "
+                                            + "duration-300 "
+                                            + fondoCard
+                                        }
+                                    >
                                     {/* Badge destacado */}
                                     {dest && (
                                         <div
@@ -338,6 +339,7 @@ export default function PaginaPaquetes() {
                                         </Link>
                                     </div>
                                 </div>
+                                </Animado>
                             );
                         })}
                     </div>

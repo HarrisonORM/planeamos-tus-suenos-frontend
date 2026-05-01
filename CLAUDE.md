@@ -5,120 +5,159 @@ Sitio web para "Planeamos tus Sueños", empresa de organización de eventos
 ubicada en el Oriente Antioqueño, Colombia (Rionegro, Guarne, Llanogrande).
 Es un proyecto de portafolio para un desarrollador en búsqueda de empleo.
 
+## Arquitectura
+El proyecto está dividido en DOS repositorios independientes:
+- **Frontend:** planeamos-tus-suenos-frontend (Next.js)
+- **Backend:** planeamos-tus-suenos-backend (Django)
+
+Se comunican via API REST. El frontend consume endpoints del backend.
+
 ## Stack Tecnológico
+
+### Frontend
 - **Framework:** Next.js 16.2 con App Router
 - **Lenguaje:** TypeScript
 - **Estilos:** Tailwind CSS v4 (usa @theme en globals.css, NO tailwind.config)
-- **Íconos:** lucide-react (NO tiene íconos de marcas como Facebook/Instagram, usar SVG inline)
-- **Imágenes:** Cloudinary + Unsplash (demo)
-- **Pagos:** Wompi sandbox (Fase 4)
-- **Backend:** Python + Django (repositorio separado, aún no creado)
-- **Base de datos:** PostgreSQL en Supabase
-- **Despliegue:** Vercel (frontend) + Railway (backend) — todo gratuito
+- **Íconos:** lucide-react (NO tiene íconos de marcas, usar SVG inline)
+- **Imágenes:** URLs de Unsplash (demo)
 
-## Repositorios
-- Frontend: planeamos-tus-suenos-frontend (este repo)
-- Backend: planeamos-tus-suenos-backend (por crear)
-- Los repos están separados por decisión de arquitectura
+### Backend
+- **Framework:** Django 5 + Django REST Framework
+- **Lenguaje:** Python 3
+- **Base de datos:** SQLite (desarrollo) / PostgreSQL Supabase (producción)
+- **CORS:** django-cors-headers
+- **Variables de entorno:** python-decouple
+
+### Despliegue (pendiente)
+- Frontend → Vercel (gratis)
+- Backend → Railway (gratis)
 
 ## Paleta de Colores (definida en globals.css @theme)
-- Verde salvia: #748068 (primario, botones, acciones)
+- Verde salvia: #748068 (primario, botones)
 - Verde oscuro: #5C6852 (hover de botones)
 - Verde claro: #E8EDDF (fondos suaves)
-- Durazno: #E2C8B4 (acentos, títulos elegantes, decoración)
+- Durazno: #E2C8B4 (acentos, títulos elegantes)
 - Durazno claro: #F5EDE5 (fondos cálidos)
 - Durazno oscuro: #C4A48E (hover de acentos)
-- Negro elegante: #1A1A1A (fondos oscuros, texto principal)
+- Negro elegante: #1A1A1A (fondos oscuros)
 - Negro suave: #2C2C2C (fondos secundarios)
-- Blanco cálido: #FAF7F2 (fondo general del sitio)
+- Blanco cálido: #FAF7F2 (fondo general)
 - Gris texto: #6B6B6B (texto secundario)
 
 ## Tipografías
 - Títulos: "Cormorant Garamond" (elegante, serif)
 - Cuerpo: "Jost" (moderna, sans-serif)
-- Se importan desde Google Fonts en globals.css
+- Importadas desde Google Fonts en globals.css
 
-## Estructura de Archivos Actual
+## Estructura Frontend
 ```
 src/
 ├── app/
-│   ├── globals.css          ✅ Estilos globales + @theme con colores
+│   ├── globals.css          ✅ @theme + estilos base + .contenedor-principal
 │   ├── layout.tsx           ✅ Layout con Navbar, Footer, WhatsApp
-│   └── page.tsx             ✅ Página inicio (solo Hero por ahora)
+│   ├── page.tsx             ✅ Inicio (Hero + servicios + portafolio + paquetes + CTA)
+│   ├── nosotros/page.tsx    ✅ Historia, valores, cifras, cobertura
+│   ├── portafolio/page.tsx  ✅ Galería con filtros — CONECTADO AL BACKEND
+│   ├── catalogo/page.tsx    ✅ Productos alquiler con filtros — CONECTADO AL BACKEND
+│   ├── servicios/page.tsx   ✅ Servicios personal con filtros — CONECTADO AL BACKEND
+│   ├── paquetes/page.tsx    ✅ Paquetes prediseñados (usa mock.ts)
+│   ├── locaciones/page.tsx  ✅ Locaciones reales del Oriente (usa mock.ts)
+│   └── contacto/page.tsx    ✅ Formulario contacto + cotización (alert por ahora)
 ├── components/
 │   ├── layout/
-│   │   ├── Navbar.tsx       ✅ Menú superior con modo móvil
-│   │   ├── Footer.tsx       ✅ Pie de página 4 columnas
-│   │   └── WhatsAppFlotante.tsx ✅ Botón flotante WhatsApp
-│   └── ui/                  (vacía, para componentes reutilizables)
+│   │   ├── Navbar.tsx       ✅ Menú con modo escritorio + móvil + efecto scroll
+│   │   ├── Footer.tsx       ✅ Pie de página 4 columnas + SVG redes sociales
+│   │   └── WhatsAppFlotante.tsx ✅ Botón flotante con animación pulse
+│   └── ui/
+│       └── EncabezadoPagina.tsx ✅ Header reutilizable para páginas internas
 ├── data/
-│   └── mock.ts              ✅ Datos de ejemplo (productos, servicios, portafolio, locaciones, paquetes)
+│   └── mock.ts              ✅ Datos demo (paquetes, locaciones — los que no tienen backend)
 └── lib/
-    └── utils.ts             ✅ formatearPrecio, formatearFecha, etiquetaTipoEvento, etiquetaCategoria
+    ├── utils.ts             ✅ formatearPrecio, formatearFecha, etiquetas
+    └── api.ts               ✅ Conector con el backend (getProductos, getServicios, etc.)
 ```
 
-## Lo que ya está COMPLETADO
+## Estructura Backend
+```
+planeamos-tus-suenos-backend/
+├── config/
+│   ├── settings.py          ✅ Configuración Django + DRF + CORS
+│   ├── urls.py              ✅ Rutas principales con API endpoints
+│   ├── wsgi.py
+│   └── asgi.py
+├── apps/
+│   ├── catalogo/
+│   │   ├── models.py        ✅ ProductoAlquiler, ServicioPersonal
+│   │   ├── serializers.py   ✅ Serializers para la API
+│   │   ├── views.py         ✅ ViewSets con filtros por categoría
+│   │   ├── urls.py          ✅ Rutas: /productos/ y /servicios/
+│   │   ├── admin.py         ✅ Panel admin configurado
+│   │   └── management/commands/cargar_datos.py ✅ Script carga masiva
+│   ├── portafolio/
+│   │   ├── models.py        ✅ EventoPortafolio
+│   │   ├── serializers.py   ✅
+│   │   ├── views.py         ✅ ViewSet con filtro por tipo_evento
+│   │   ├── urls.py          ✅ Ruta: /eventos/
+│   │   └── admin.py         ✅
+│   ├── contacto/
+│   │   ├── models.py        ✅ MensajeContacto, Cotizacion
+│   │   ├── serializers.py   ✅
+│   │   ├── views.py         ✅ CreateModelMixin (solo crear)
+│   │   ├── urls.py          ✅ Rutas: /mensajes/ y /cotizaciones/
+│   │   └── admin.py         ✅
+│   └── reservas/
+│       ├── models.py        ✅ Reserva con estados
+│       ├── serializers.py   ✅
+│       ├── views.py         ✅ ViewSet con filtro por estado
+│       ├── urls.py          ✅ Ruta: /reservas/
+│       └── admin.py         ✅
+├── manage.py
+├── requirements.txt         ✅
+├── .env                     (no se sube a GitHub)
+├── .env.example             ✅
+├── .gitignore               ✅
+└── README.md                ✅
+```
 
-### Fase 1 — Configuración del entorno
-- [x] Proyecto Next.js 16 con TypeScript y Tailwind CSS v4
-- [x] Paleta de colores personalizada (verde salvia + durazno)
-- [x] Fuentes Google Fonts configuradas
-- [x] .gitignore configurado
-- [x] .env.local.example creado
-- [x] README.md profesional
-- [x] Repositorio en GitHub funcionando
-- [x] next.config.ts con dominios de Cloudinary y Unsplash
+## API Endpoints del Backend
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | /api/catalogo/productos/ | Lista productos (filtro: ?categoria=) |
+| GET | /api/catalogo/servicios/ | Lista servicios (filtro: ?categoria=) |
+| GET | /api/portafolio/eventos/ | Lista eventos (filtro: ?tipo_evento=) |
+| POST | /api/contacto/mensajes/ | Crear mensaje de contacto |
+| POST | /api/contacto/cotizaciones/ | Crear cotización |
+| GET/POST | /api/reservas/reservas/ | CRUD de reservas (filtro: ?estado=) |
 
-### Fase 2 — Interfaz visual (EN PROGRESO)
-- [x] Navbar con menú escritorio + menú móvil + efecto scroll
-- [x] Footer con 4 columnas + íconos SVG de redes sociales
-- [x] WhatsApp flotante con animación pulse
-- [x] Layout principal conectando Navbar + Footer + WhatsApp
-- [x] Página de inicio — sección Hero
-- [x] Datos mock completos (12 productos, 8 servicios, 8 portafolio, 6 locaciones, 5 paquetes)
-- [x] Funciones auxiliares (formatearPrecio, formatearFecha, etc.)
+## Estado de Conexión Frontend ↔ Backend
+| Página | Fuente de datos | Estado |
+|--------|----------------|--------|
+| Inicio (page.tsx) | mock.ts | Pendiente de conectar |
+| Portafolio | API backend | ✅ Conectado |
+| Catálogo | API backend | ✅ Conectado |
+| Servicios | API backend | ✅ Conectado |
+| Paquetes | mock.ts | Sin modelo en backend |
+| Locaciones | mock.ts | Sin modelo en backend |
+| Nosotros | Contenido estático | No necesita backend |
+| Contacto | alert() | Pendiente de conectar POST |
 
 ## Lo que FALTA por hacer
 
-### Fase 2 — Continuar interfaz visual
-- [ ] Página inicio — sección servicios destacados (cards)
-- [ ] Página inicio — sección portafolio preview
-- [ ] Página inicio — sección paquetes destacados
-- [ ] Página inicio — sección CTA final (llamado a cotizar)
-- [ ] Componente reutilizable: EncabezadoPagina (header de páginas internas)
-- [ ] Componente reutilizable: FiltroBarra (filtros para catálogo/portafolio)
-- [ ] Componente reutilizable: TarjetaProducto (card de producto/servicio)
-- [ ] Página /nosotros
-- [ ] Página /portafolio (galería con filtros por tipo de evento)
-- [ ] Página /catalogo (productos de alquiler con filtros por categoría)
-- [ ] Página /servicios (servicios de personal con filtros)
-- [ ] Página /paquetes (paquetes prediseñados + cotizador interactivo)
-- [ ] Página /locaciones (locaciones recomendadas del Oriente Antioqueño)
-- [ ] Página /contacto (formulario de contacto + formulario de cotización)
-
-### Fase 3 — Backend y API (repositorio separado)
-- [ ] Crear repositorio planeamos-tus-suenos-backend
-- [ ] Proyecto Django con Django REST Framework
-- [ ] Modelos: Productos, Servicios, Eventos, Reservas, Clientes, Paquetes
-- [ ] API REST con filtros por categoría, tipo de evento, precio
-- [ ] Panel de administración Django personalizado
-- [ ] Conexión con Supabase (PostgreSQL)
-- [ ] Subida de imágenes a Cloudinary
-
-### Fase 4 — Reservas, formularios y pagos
-- [ ] Formulario de cotización de evento completo
-- [ ] Formulario de reserva de alquiler
-- [ ] Formulario de contratación de personal
-- [ ] Calendario de disponibilidad
+### Fase 4 — Formularios funcionales y pagos
+- [ ] Conectar formulario de contacto con POST /api/contacto/mensajes/
+- [ ] Conectar formulario de cotización con POST /api/contacto/cotizaciones/
+- [ ] Crear modelos de Paquete y Locacion en el backend (opcional)
+- [ ] Conectar página de inicio con el backend
+- [ ] Sistema de reservas con calendario
 - [ ] Integración Wompi sandbox (pagos con anticipo)
 - [ ] Notificaciones por correo electrónico
 
 ### Fase 5 — Pulido y despliegue
-- [ ] Responsividad completa (mobile first)
-- [ ] SEO optimizado
 - [ ] Animaciones con Framer Motion
+- [ ] SEO final (meta tags, Open Graph)
+- [ ] Responsividad completa revisada
 - [ ] Despliegue frontend en Vercel
-- [ ] Despliegue backend en Railway
+- [ ] Despliegue backend en Railway con PostgreSQL
 - [ ] README final con capturas de pantalla
 
 ## Convenciones de Código
@@ -126,45 +165,53 @@ src/
 - Líneas cortas: evitar líneas de más de 60 caracteres en className
 - Para clases largas de Tailwind: usar concatenación con + o variables
 - Nombres en español para componentes y variables del negocio
-- Archivos de componentes en PascalCase: Navbar.tsx, Footer.tsx
-- Archivos de datos y utilidades en camelCase: mock.ts, utils.ts
+- Frontend: archivos componentes en PascalCase, datos/utils en camelCase
+- Backend: nombres de campos con guiones_bajos (Django convention)
 
 ## Problemas Conocidos y Soluciones
-1. **Tailwind CSS v4 no usa tailwind.config.ts** — los colores se definen en globals.css con @theme
-2. **lucide-react no tiene íconos de marcas** — usar SVG inline para Instagram, Facebook, WhatsApp
-3. **`color: inherit` en CSS base pisa colores de Tailwind** — no usar `color: inherit` en la etiqueta `a` de globals.css
-4. **Google Fonts @import debe ir ANTES de @import "tailwindcss"** — si no, da error de parsing
-5. **Líneas largas se cortan al copiar** — partir className en variables o usar concatenación con +
+1. **Tailwind CSS v4 no usa tailwind.config.ts** → colores en globals.css con @theme
+2. **lucide-react no tiene íconos de marcas** → SVG inline para Instagram, Facebook, WhatsApp
+3. **`color: inherit` en CSS pisa colores de Tailwind** → no usar color: inherit en etiqueta `a`
+4. **Google Fonts @import debe ir ANTES de @import "tailwindcss"** → error de parsing si no
+5. **Líneas largas se cortan al copiar** → partir className en variables o concatenar con +
+6. **max-w-7xl no funciona en Tailwind v4** → usar clase CSS custom `.contenedor-principal`
+7. **Nombres de campos difieren** → mock usa camelCase (tipoEvento), backend usa snake_case (tipo_evento)
 
-## Secciones del Sitio Web
-| Sección | Ruta | Contenido |
-|---------|------|-----------|
-| Inicio | / | Hero + servicios + portafolio + paquetes + CTA |
-| Nosotros | /nosotros | Historia, valores, cobertura |
-| Portafolio | /portafolio | Galería filtrable por tipo de evento |
-| Catálogo | /catalogo | Alquiler: mobiliario, menaje, sonido, iluminación, decoración |
-| Servicios | /servicios | Personal: meseros, chef, DJ, repostería, fotografía, florería |
-| Paquetes | /paquetes | Paquetes prediseñados + cotizador interactivo |
-| Locaciones | /locaciones | Haciendas y salones del Oriente Antioqueño |
-| Contacto | /contacto | Formulario contacto + formulario cotización evento |
+## Datos en la Base de Datos
+- 12 productos de alquiler (mobiliario, menaje, sonido, iluminación, decoración)
+- 8 servicios de personal (meseros, chef, DJ, repostería, fotografía, florería)
+- 8 eventos del portafolio (bodas, quinceañeras, fiestas, corporativos)
+- Cargados con: python manage.py cargar_datos
 
-## Categorías del Catálogo de Alquiler
-- Mobiliario (sillas, mesas, lounge)
-- Menaje y Cristalería (cubiertos, vajilla, copas de vino/champaña/margarita)
-- Sonido (equipos de sonido, micrófonos)
-- Iluminación (candelabros de mesa, candelabros de piso, luces LED)
-- Decoración (arcos florales, centros de mesa)
+## Locaciones Reales (en mock.ts)
+- Zona E: El Establo, Bali, Marrakech (Llanogrande)
+- Villa Celeste (Llanogrande)
+- Montana (Llanogrande)
+- Zelavi (Rionegro)
+- Granate Eventos (Rionegro)
+- Hotel Lagoon Llanogrande (Rionegro)
+- Imperial Eventos Campestre (Llanogrande)
 
-## Servicios de Personal
-- Meseros profesionales
-- Chef (bodas, parrilla)
-- DJ + equipo
-- Repostería (mesa de postres, tortas)
-- Fotografía profesional
-- Decoración floral
+## Cómo Ejecutar el Proyecto
 
-## Tipos de Evento
-- Boda
-- Quinceañera
-- Fiesta (cumpleaños, grados)
-- Corporativo (empresarial)
+### Frontend
+```bash
+cd planeamos-tus-suenos-frontend
+npm install
+npm run dev
+# Abre http://localhost:3000
+```
+
+### Backend
+```bash
+cd planeamos-tus-suenos-backend
+python -m venv entorno
+entorno\Scripts\activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py cargar_datos
+python manage.py runserver
+# Abre http://127.0.0.1:8000
+```
+
+Ambos servidores deben estar activos para que las páginas conectadas funcionen.

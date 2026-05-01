@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Animado from "@/components/ui/Animado";
 import EncabezadoPagina
     from "@/components/ui/EncabezadoPagina";
 import { getPortafolio } from "@/lib/api";
@@ -146,17 +147,17 @@ export default function PaginaPortafolio() {
                                 + "lg:grid-cols-3 gap-6"
                             }
                         >
-                            {eventos.map((evento: any) => (
-                                <div
-                                    key={evento.id}
-                                    className={
-                                        "group relative "
-                                        + "overflow-hidden "
-                                        + "rounded-tarjeta "
-                                        + "cursor-pointer "
-                                        + "h-[400px]"
-                                    }
-                                >
+                            {eventos.map((evento: any, index: number) => (
+                                <Animado key={evento.id} delay={index * 0.1}>
+                                    <div
+                                        className={
+                                            "group relative "
+                                            + "overflow-hidden "
+                                            + "rounded-tarjeta "
+                                            + "cursor-pointer "
+                                            + "h-[400px]"
+                                        }
+                                    >
                                     <img
                                         src={evento.imagen}
                                         alt={evento.titulo}
@@ -237,7 +238,8 @@ export default function PaginaPortafolio() {
                                             </span>
                                         </div>
                                     </div>
-                                </div>
+                                    </div>
+                                </Animado>
                             ))}
                         </div>
                     )}

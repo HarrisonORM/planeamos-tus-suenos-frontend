@@ -1,4 +1,7 @@
+"use client";
+
 import EncabezadoPagina from "@/components/ui/EncabezadoPagina";
+import Animado from "@/components/ui/Animado";
 import {
     Heart,
     Star,
@@ -71,7 +74,7 @@ export default function PaginaNosotros() {
                             + "items-center"
                         }
                     >
-                        <div>
+                        <Animado direccion="izquierda">
                             <p
                                 className={
                                     "font-cuerpo text-xs "
@@ -123,9 +126,10 @@ export default function PaginaNosotros() {
                                     locaciones y proveedores de la región.
                                 </p>
                             </div>
-                        </div>
+                        </Animado>
 
-                        <div
+                        <Animado
+                            direccion="derecha"
                             className={
                                 "relative h-[500px] "
                                 + "rounded-tarjeta overflow-hidden"
@@ -150,7 +154,7 @@ export default function PaginaNosotros() {
                                     + "to-transparent"
                                 }
                             />
-                        </div>
+                        </Animado>
                     </div>
                 </div>
             </section>
@@ -158,7 +162,7 @@ export default function PaginaNosotros() {
             {/* Valores */}
             <section className="py-24 bg-verde-claro">
                 <div className="contenedor-principal">
-                    <div className="text-center mb-16">
+                    <Animado className="text-center mb-16">
                         <p
                             className={
                                 "font-cuerpo text-xs "
@@ -182,7 +186,7 @@ export default function PaginaNosotros() {
                                 valores
                             </span>
                         </h2>
-                    </div>
+                    </Animado>
 
                     <div
                         className={
@@ -190,11 +194,12 @@ export default function PaginaNosotros() {
                             + "md:grid-cols-3 gap-8"
                         }
                     >
-                        {valores.map((valor) => {
+                        {valores.map((valor, indice) => {
                             const Icono = valor.icono;
                             return (
-                                <div
+                                <Animado
                                     key={valor.titulo}
+                                    delay={indice * 0.1}
                                     className={
                                         "text-center p-8 "
                                         + "bg-blanco-calido "
@@ -235,7 +240,7 @@ export default function PaginaNosotros() {
                                     >
                                         {valor.texto}
                                     </p>
-                                </div>
+                                </Animado>
                             );
                         })}
                     </div>
@@ -251,9 +256,10 @@ export default function PaginaNosotros() {
                             + "md:grid-cols-4 gap-8"
                         }
                     >
-                        {cifras.map((cifra) => (
-                            <div
+                        {cifras.map((cifra, indice) => (
+                            <Animado
                                 key={cifra.texto}
+                                delay={indice * 0.1}
                                 className="text-center"
                             >
                                 <p
@@ -273,7 +279,7 @@ export default function PaginaNosotros() {
                                 >
                                     {cifra.texto}
                                 </p>
-                            </div>
+                            </Animado>
                         ))}
                     </div>
                 </div>
@@ -282,7 +288,7 @@ export default function PaginaNosotros() {
             {/* Cobertura */}
             <section className="py-24 bg-blanco-calido">
                 <div className="contenedor-principal">
-                    <div className="text-center mb-16">
+                    <Animado className="text-center mb-16">
                         <p
                             className={
                                 "font-cuerpo text-xs "
@@ -306,7 +312,7 @@ export default function PaginaNosotros() {
                                 cobertura
                             </span>
                         </h2>
-                    </div>
+                    </Animado>
 
                     <div
                         className={
@@ -315,9 +321,10 @@ export default function PaginaNosotros() {
                             + "lg:grid-cols-6 gap-4"
                         }
                     >
-                        {municipios.map((municipio) => (
-                            <div
+                        {municipios.map((municipio, indice) => (
+                            <Animado
                                 key={municipio}
+                                delay={indice * 0.1}
                                 className={
                                     "text-center p-6 "
                                     + "bg-verde-claro "
@@ -342,7 +349,7 @@ export default function PaginaNosotros() {
                                 >
                                     {municipio}
                                 </p>
-                            </div>
+                            </Animado>
                         ))}
                     </div>
                 </div>

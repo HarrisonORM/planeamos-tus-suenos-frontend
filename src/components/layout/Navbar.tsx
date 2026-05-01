@@ -13,7 +13,8 @@ const enlaces = [
     { nombre: "Servicios", ruta: "/servicios" },
     { nombre: "Paquetes", ruta: "/paquetes" },
     { nombre: "Locaciones", ruta: "/locaciones" },
-    { nombre: "Contacto", ruta: "/contacto" },
+    { nombre: "Cotizador", ruta: "/cotizador" },
+    { nombre: "Contacto", ruta: "/contacto" }
 ];
 
 export default function Navbar() {
@@ -107,21 +108,7 @@ export default function Navbar() {
                         })}
                     </nav>
 
-                    {/* Botón cotizar */}
-                    <Link
-                        href="/contacto"
-                        className={
-                            "hidden lg:inline-block "
-                            + "bg-verde hover:bg-verde-oscuro "
-                            + "text-blanco-calido font-cuerpo "
-                            + "text-sm font-semibold "
-                            + "px-6 py-2.5 rounded-boton "
-                            + "transition-all duration-300 "
-                            + "hover:shadow-suave"
-                        }
-                    >
-                        Cotizar Evento
-                    </Link>
+
 
                     {/* Botón menú móvil */}
                     <button
@@ -171,18 +158,8 @@ export default function Navbar() {
                             </Link>
                         );
                     })}
-                    <Link
-                        href="/contacto"
-                        className={
-                            "mt-4 bg-verde text-blanco-calido "
-                            + "font-cuerpo font-semibold "
-                            + "px-8 py-3 rounded-boton "
-                            + "hover:bg-verde-oscuro "
-                            + "transition-colors"
-                        }
-                    >
-                        Cotizar Evento
-                    </Link>
+
+
                 </nav>
             </div>
         </>

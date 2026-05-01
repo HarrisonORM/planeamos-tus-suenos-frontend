@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Animado from "@/components/ui/Animado";
 import EncabezadoPagina
     from "@/components/ui/EncabezadoPagina";
 import { locaciones } from "@/data/mock";
@@ -98,21 +99,21 @@ export default function PaginaLocaciones() {
                             + "lg:grid-cols-3 gap-6"
                         }
                     >
-                        {locacionesFiltradas.map((loc) => (
-                            <div
-                                key={loc.id}
-                                className={
-                                    "bg-blanco-puro "
-                                    + "rounded-tarjeta "
-                                    + "overflow-hidden "
-                                    + "border border-durazno/20 "
-                                    + "shadow-suave "
-                                    + "hover:shadow-elegante "
-                                    + "hover:-translate-y-1 "
-                                    + "transition-all duration-300 "
-                                    + "flex flex-col"
-                                }
-                            >
+                        {locacionesFiltradas.map((loc, index) => (
+                            <Animado key={loc.id} delay={index * 0.1}>
+                                <div
+                                    className={
+                                        "bg-blanco-puro "
+                                        + "rounded-tarjeta "
+                                        + "overflow-hidden "
+                                        + "border border-durazno/20 "
+                                        + "shadow-suave "
+                                        + "hover:shadow-elegante "
+                                        + "hover:-translate-y-1 "
+                                        + "transition-all duration-300 "
+                                        + "flex flex-col"
+                                    }
+                                >
                                 {/* Imagen */}
                                 <div
                                     className={
@@ -259,6 +260,7 @@ export default function PaginaLocaciones() {
                                     </div>
                                 </div>
                             </div>
+                            </Animado>
                         ))}
                     </div>
                 </div>

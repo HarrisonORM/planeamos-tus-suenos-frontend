@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Animado from "@/components/ui/Animado";
 import EncabezadoPagina
     from "@/components/ui/EncabezadoPagina";
 import { getProductos } from "@/lib/api";
@@ -154,22 +155,22 @@ export default function PaginaCatalogo() {
                                 + "lg:grid-cols-3 gap-6"
                             }
                         >
-                            {productos.map((producto: any) => (
-                                <div
-                                    key={producto.id}
-                                    className={
-                                        "bg-blanco-puro "
-                                        + "rounded-tarjeta "
-                                        + "overflow-hidden "
-                                        + "border border-durazno/20 "
-                                        + "shadow-suave "
-                                        + "hover:shadow-elegante "
-                                        + "hover:-translate-y-1 "
-                                        + "transition-all "
-                                        + "duration-300 "
-                                        + "flex flex-col"
-                                    }
-                                >
+                            {productos.map((producto: any, index: number) => (
+                                <Animado key={producto.id} delay={index * 0.1}>
+                                    <div
+                                        className={
+                                            "bg-blanco-puro "
+                                            + "rounded-tarjeta "
+                                            + "overflow-hidden "
+                                            + "border border-durazno/20 "
+                                            + "shadow-suave "
+                                            + "hover:shadow-elegante "
+                                            + "hover:-translate-y-1 "
+                                            + "transition-all "
+                                            + "duration-300 "
+                                            + "flex flex-col"
+                                        }
+                                    >
                                     <div
                                         className={
                                             "h-52 overflow-hidden "
@@ -319,7 +320,8 @@ export default function PaginaCatalogo() {
                                             </span>
                                         </div>
                                     </div>
-                                </div>
+                                    </div>
+                                </Animado>
                             ))}
                         </div>
                     )}
