@@ -65,12 +65,17 @@ export default function PaginaNosotros() {
             />
 
             {/* Historia */}
-            <section className="py-24 bg-blanco-calido">
+            <section
+                className={
+                    "py-16 md:py-24 bg-blanco-calido"
+                }
+            >
                 <div className="contenedor-principal">
                     <div
                         className={
                             "grid grid-cols-1 "
-                            + "lg:grid-cols-2 gap-16 "
+                            + "lg:grid-cols-2 gap-10 "
+                            + "lg:gap-16 "
                             + "items-center"
                         }
                     >
@@ -131,7 +136,8 @@ export default function PaginaNosotros() {
                         <Animado
                             direccion="derecha"
                             className={
-                                "relative h-[500px] "
+                                "relative h-[320px] "
+                                + "sm:h-[400px] lg:h-[500px] "
                                 + "rounded-tarjeta overflow-hidden"
                             }
                         >
@@ -160,7 +166,11 @@ export default function PaginaNosotros() {
             </section>
 
             {/* Valores */}
-            <section className="py-24 bg-verde-claro">
+            <section
+                className={
+                    "py-16 md:py-24 bg-verde-claro"
+                }
+            >
                 <div className="contenedor-principal">
                     <Animado className="text-center mb-16">
                         <p
@@ -191,7 +201,8 @@ export default function PaginaNosotros() {
                     <div
                         className={
                             "grid grid-cols-1 "
-                            + "md:grid-cols-3 gap-8"
+                            + "md:grid-cols-3 gap-5 "
+                            + "md:gap-8"
                         }
                     >
                         {valores.map((valor, indice) => {
@@ -201,7 +212,8 @@ export default function PaginaNosotros() {
                                     key={valor.titulo}
                                     delay={indice * 0.1}
                                     className={
-                                        "text-center p-8 "
+                                        "text-center p-6 "
+                                        + "md:p-8 "
                                         + "bg-blanco-calido "
                                         + "rounded-tarjeta "
                                         + "border border-durazno/20 "
@@ -248,7 +260,11 @@ export default function PaginaNosotros() {
             </section>
 
             {/* Cifras */}
-            <section className="py-20 bg-negro-elegante">
+            <section
+                className={
+                    "py-16 md:py-20 bg-negro-elegante"
+                }
+            >
                 <div className="contenedor-principal">
                     <div
                         className={
@@ -286,7 +302,11 @@ export default function PaginaNosotros() {
             </section>
 
             {/* Cobertura */}
-            <section className="py-24 bg-blanco-calido">
+            <section
+                className={
+                    "py-16 md:py-24 bg-blanco-calido"
+                }
+            >
                 <div className="contenedor-principal">
                     <Animado className="text-center mb-16">
                         <p
@@ -318,7 +338,8 @@ export default function PaginaNosotros() {
                         className={
                             "grid grid-cols-2 "
                             + "md:grid-cols-3 "
-                            + "lg:grid-cols-6 gap-4"
+                            + "lg:grid-cols-6 gap-3 "
+                            + "md:gap-4"
                         }
                     >
                         {municipios.map((municipio, indice) => (
@@ -326,7 +347,8 @@ export default function PaginaNosotros() {
                                 key={municipio}
                                 delay={indice * 0.1}
                                 className={
-                                    "text-center p-6 "
+                                    "text-center p-4 "
+                                    + "sm:p-6 "
                                     + "bg-verde-claro "
                                     + "rounded-tarjeta "
                                     + "border border-verde/20 "

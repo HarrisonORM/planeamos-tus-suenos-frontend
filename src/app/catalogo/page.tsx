@@ -9,6 +9,7 @@ import {
     formatearPrecio,
     etiquetaCategoria,
 } from "@/lib/utils";
+import type { ProductoAlquiler } from "@/types";
 
 const filtros = [
     { valor: "todos", etiqueta: "Todos" },
@@ -29,7 +30,9 @@ export default function PaginaCatalogo() {
     const [filtroActivo, setFiltroActivo] = useState(
         "todos"
     );
-    const [productos, setProductos] = useState<any[]>([]);
+    const [productos, setProductos] = useState<
+        ProductoAlquiler[]
+    >([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
 
@@ -155,8 +158,12 @@ export default function PaginaCatalogo() {
                                 + "lg:grid-cols-3 gap-6"
                             }
                         >
-                            {productos.map((producto: any, index: number) => (
-                                <Animado key={producto.id} delay={index * 0.1}>
+                            {productos.map(
+                                (producto, index) => (
+                                <Animado
+                                    key={producto.id}
+                                    delay={index * 0.1}
+                                >
                                     <div
                                         className={
                                             "bg-blanco-puro "
@@ -322,7 +329,8 @@ export default function PaginaCatalogo() {
                                     </div>
                                     </div>
                                 </Animado>
-                            ))}
+                                )
+                            )}
                         </div>
                     )}
                 </div>

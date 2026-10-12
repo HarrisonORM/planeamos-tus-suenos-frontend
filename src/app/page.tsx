@@ -52,7 +52,7 @@ export default function PaginaInicio() {
 
       {/* ── Hero ─────────────────────────────────────────── */}
       <section className={
-        "relative min-h-screen flex items-center "
+        "relative min-h-[90svh] flex items-center "
         + "justify-center text-center px-6 "
         + "bg-negro-elegante overflow-hidden"
       }>
@@ -126,10 +126,10 @@ export default function PaginaInicio() {
       </section>
 
       {/* ── Servicios ────────────────────────────────────── */}
-      <section className="py-24 bg-verde-claro">
+      <section className="py-20 md:py-24 bg-verde-claro">
         <div className={contenedor}>
           <Animado>
-            <div className="text-center mb-16">
+            <div className="text-center mb-12 md:mb-16">
               <p className={
                 "font-cuerpo text-xs tracking-[0.4em] "
                 + "uppercase text-verde-oscuro mb-4"
@@ -227,10 +227,10 @@ export default function PaginaInicio() {
       </section>
 
       {/* ── Portafolio Preview ────────────────────────────── */}
-      <section className="py-24 bg-negro-elegante">
+      <section className="py-24 md:py-28 bg-negro-elegante">
         <div className={contenedor}>
           <Animado>
-            <div className="text-center mb-16">
+            <div className="text-center mb-12 md:mb-16">
               <p className={
                 "font-cuerpo text-xs tracking-[0.4em] "
                 + "uppercase text-verde mb-4"
@@ -317,10 +317,10 @@ export default function PaginaInicio() {
       </section>
 
       {/* ── Paquetes ─────────────────────────────────────── */}
-      <section className="py-24 bg-durazno-claro">
+      <section className="py-20 md:py-24 bg-durazno-claro">
         <div className={contenedor}>
           <Animado>
-            <div className="text-center mb-16">
+            <div className="text-center mb-12 md:mb-16">
               <p className={
                 "font-cuerpo text-xs tracking-[0.4em] "
                 + "uppercase text-verde mb-4"

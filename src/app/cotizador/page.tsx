@@ -13,6 +13,10 @@ import {
     formatearPrecio,
     etiquetaCategoria,
 } from "@/lib/utils";
+import type {
+    ProductoAlquiler,
+    ServicioPersonal,
+} from "@/types";
 import {
     ShoppingCart,
     Plus,
@@ -32,8 +36,12 @@ interface ItemSeleccionado {
 }
 
 export default function PaginaCotizador() {
-    const [productos, setProductos] = useState<any[]>([]);
-    const [servicios, setServicios] = useState<any[]>([]);
+    const [productos, setProductos] = useState<
+        ProductoAlquiler[]
+    >([]);
+    const [servicios, setServicios] = useState<
+        ServicioPersonal[]
+    >([]);
     const [cargando, setCargando] = useState(true);
     const [seleccionados, setSeleccionados] =
         useState<ItemSeleccionado[]>([]);
@@ -57,7 +65,7 @@ export default function PaginaCotizador() {
 
     // Agregar item
     const agregar = (
-        item: any,
+        item: ProductoAlquiler | ServicioPersonal,
         tipo: "producto" | "servicio"
     ) => {
         const existe = seleccionados.find(
@@ -248,7 +256,7 @@ export default function PaginaCotizador() {
                                     }
                                 >
                                     {productos.map(
-                                        (producto: any, index: number) => (
+                                        (producto, index) => (
                                             <Animado
                                                 key={producto.id}
                                                 delay={index * 0.1}
@@ -372,7 +380,7 @@ export default function PaginaCotizador() {
                                     }
                                 >
                                     {servicios.map(
-                                        (servicio: any, index: number) => (
+                                        (servicio, index) => (
                                             <Animado
                                                 key={servicio.id}
                                                 delay={index * 0.1}

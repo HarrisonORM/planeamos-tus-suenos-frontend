@@ -9,6 +9,7 @@ import {
     formatearPrecio,
     etiquetaCategoria,
 } from "@/lib/utils";
+import type { ServicioPersonal } from "@/types";
 
 const filtros = [
     { valor: "todos", etiqueta: "Todos" },
@@ -24,7 +25,9 @@ export default function PaginaServicios() {
     const [filtroActivo, setFiltroActivo] = useState(
         "todos"
     );
-    const [servicios, setServicios] = useState<any[]>([]);
+    const [servicios, setServicios] = useState<
+        ServicioPersonal[]
+    >([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
 
@@ -147,8 +150,12 @@ export default function PaginaServicios() {
                                 + "lg:grid-cols-3 gap-6"
                             }
                         >
-                            {servicios.map((servicio: any, index: number) => (
-                                <Animado key={servicio.id} delay={index * 0.1}>
+                            {servicios.map(
+                                (servicio, index) => (
+                                <Animado
+                                    key={servicio.id}
+                                    delay={index * 0.1}
+                                >
                                     <div
                                         className={
                                             "bg-blanco-puro "
@@ -313,7 +320,8 @@ export default function PaginaServicios() {
                                     </div>
                                     </div>
                                 </Animado>
-                            ))}
+                                )
+                            )}
                         </div>
                     )}
                 </div>

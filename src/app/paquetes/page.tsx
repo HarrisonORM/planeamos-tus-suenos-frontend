@@ -99,9 +99,8 @@ export default function PaginaPaquetes() {
                 <div className="contenedor-principal">
                     <div
                         className={
-                            "grid grid-cols-1 "
-                            + "md:grid-cols-2 "
-                            + "lg:grid-cols-3 gap-8"
+                            "flex flex-wrap justify-center "
+                            + "gap-6 md:gap-8"
                         }
                     >
                         {paquetesFiltrados.map((paquete, index) => {
@@ -150,12 +149,20 @@ export default function PaginaPaquetes() {
                                 + "hover:text-blanco-calido";
 
                             return (
-                                <Animado key={paquete.id} delay={index * 0.1}>
+                                <Animado
+                                    key={paquete.id}
+                                    delay={index * 0.1}
+                                    className={
+                                        "w-full shrink-0 "
+                                        + "md:w-[calc(50%-1rem)] "
+                                        + "lg:w-[calc(33.333%-1.333rem)]"
+                                    }
+                                >
                                     <div
                                         className={
                                             "rounded-tarjeta "
                                             + "overflow-hidden "
-                                            + "flex flex-col "
+                                            + "flex h-full flex-col "
                                             + "transition-all "
                                             + "duration-300 "
                                             + fondoCard

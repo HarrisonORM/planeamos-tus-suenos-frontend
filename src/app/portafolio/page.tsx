@@ -9,6 +9,7 @@ import {
     etiquetaTipoEvento,
     formatearFecha,
 } from "@/lib/utils";
+import type { EventoPortafolio } from "@/types";
 
 const filtros = [
     { valor: "todos", etiqueta: "Todos" },
@@ -22,7 +23,9 @@ export default function PaginaPortafolio() {
     const [filtroActivo, setFiltroActivo] = useState(
         "todos"
     );
-    const [eventos, setEventos] = useState<any[]>(
+    const [eventos, setEventos] = useState<
+        EventoPortafolio[]
+    >(
         []
     );
     const [cargando, setCargando] = useState(true);
@@ -144,18 +147,47 @@ export default function PaginaPortafolio() {
                             className={
                                 "grid grid-cols-1 "
                                 + "md:grid-cols-2 "
-                                + "lg:grid-cols-3 gap-6"
+                                + "lg:grid-cols-6 "
+                                + "lg:auto-rows-[220px] gap-6"
                             }
                         >
-                            {eventos.map((evento: any, index: number) => (
-                                <Animado key={evento.id} delay={index * 0.1}>
+                            {eventos.map(
+                                (evento, index) => {
+                                    const inicioGrupo =
+                                        Math.floor(index / 3) * 3;
+                                    const totalGrupo = Math.min(
+                                        3,
+                                        eventos.length - inicioGrupo
+                                    );
+                                    const posicion =
+                                        index - inicioGrupo;
+                                    const claseDistribucion =
+                                        totalGrupo === 3
+                                            ? posicion === 0
+                                                ? "lg:col-span-4 "
+                                                    + "lg:row-span-2"
+                                                : "lg:col-span-2"
+                                            : totalGrupo === 1
+                                                ? "lg:col-span-4 "
+                                                    + "lg:col-start-2"
+                                                : "lg:col-span-3";
+
+                                    return (
+                                <Animado
+                                    key={evento.id}
+                                    delay={index * 0.1}
+                                    className={
+                                        "h-full "
+                                        + claseDistribucion
+                                    }
+                                >
                                     <div
                                         className={
                                             "group relative "
                                             + "overflow-hidden "
                                             + "rounded-tarjeta "
                                             + "cursor-pointer "
-                                            + "h-[400px]"
+                                            + "h-[400px] lg:h-full"
                                         }
                                     >
                                     <img
@@ -240,7 +272,9 @@ export default function PaginaPortafolio() {
                                     </div>
                                     </div>
                                 </Animado>
-                            ))}
+                                    );
+                                }
+                            )}
                         </div>
                     )}
                 </div>
