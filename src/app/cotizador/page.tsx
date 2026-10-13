@@ -9,7 +9,6 @@ import {
     getFechasOcupadas,
     getProductos,
     getServicios,
-    iniciarPagoAnticipo,
 } from "@/lib/api";
 import {
     formatearPrecio,
@@ -69,7 +68,6 @@ export default function PaginaCotizador() {
     const [errorReserva, setErrorReserva] = useState("");
     const [reservaCreada, setReservaCreada] =
         useState<RespuestaReserva | null>(null);
-    const [iniciandoPago, setIniciandoPago] = useState(false);
 
     // Cargar datos del backend
     useEffect(() => {
@@ -164,27 +162,6 @@ export default function PaginaCotizador() {
             );
         } finally {
             setEnviandoReserva(false);
-        }
-    };
-
-    const pagarAnticipo = async () => {
-        if (!reservaCreada) return;
-        setErrorReserva("");
-        setIniciandoPago(true);
-
-        try {
-            const checkout = await iniciarPagoAnticipo(
-                reservaCreada.token_pago
-            );
-            window.location.assign(checkout.checkout_url);
-        } catch (error) {
-            setErrorReserva(
-                error instanceof Error
-                    ? error.message
-                    : "No se pudo iniciar el pago del anticipo."
-            );
-        } finally {
-            setIniciandoPago(false);
         }
     };
 
@@ -956,45 +933,12 @@ export default function PaginaCotizador() {
                                                 reservaCreada.valor_total
                                             )}
                                         </strong>
-                                        . El equipo revisará tu solicitud
-                                        y confirmará el anticipo antes
-                                        de habilitar el pago.
+                                        . Nos comunicaremos contigo al
+                                        teléfono o correo registrado para
+                                        confirmar disponibilidad y coordinar
+                                        el anticipo. Por ahora no se
+                                        realizan pagos en línea.
                                     </p>
-                                    <button
-                                        type="button"
-                                        onClick={pagarAnticipo}
-                                        disabled={iniciandoPago}
-                                        className={
-                                            "mt-5 inline-flex "
-                                            + "items-center justify-center "
-                                            + "gap-2 bg-verde "
-                                            + "hover:bg-verde-oscuro "
-                                            + "disabled:opacity-60 "
-                                            + "text-blanco-calido "
-                                            + "font-cuerpo font-semibold "
-                                            + "px-6 py-3 rounded-boton "
-                                            + "transition-colors"
-                                        }
-                                    >
-                                        {iniciandoPago
-                                            ? <LoaderCircle
-                                                size={16}
-                                                className="animate-spin"
-                                            />
-                                            : <Send size={16} />}
-                                        Pagar anticipo
-                                    </button>
-                                    {errorReserva && (
-                                        <p
-                                            role="alert"
-                                            className={
-                                                "font-cuerpo text-sm "
-                                                + "text-red-600 mt-3"
-                                            }
-                                        >
-                                            {errorReserva}
-                                        </p>
-                                    )}
                                 </div>
                             </div>
                         </section>

@@ -27,7 +27,22 @@ const IMG = {
     hacienda1: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
     hacienda2: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800",
     hacienda3: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800",
-    salon1: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800",
+    // Locaciones
+    lugar1: "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=800",
+    lugar2: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=800",
+    lugar3: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=800",
+    lugar4: "https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=800",
+    lugar5: "https://images.unsplash.com/photo-1507504031003-b417219a0fde?w=800",
+    lugar6: "https://images.unsplash.com/photo-1530023367847-a683933f4172?w=800",
+    // Paquetes
+    paq1: "https://images.unsplash.com/photo-1529636798458-92182e662485?w=800",
+    paq2: "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?w=800",
+    paq3: "https://images.unsplash.com/photo-1555244162-803834f70033?w=800",
+    paq4: "https://images.unsplash.com/photo-1556125574-d7f27ec36a06?w=800",
+    paq5: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=800",
+    // Portafolio y menaje
+    boda5: "https://images.unsplash.com/photo-1460978812857-470ed1c77af0?w=800",
+    champana: "https://images.unsplash.com/photo-1522413452208-996ff3f3e740?w=600",
 };
 
 
@@ -83,7 +98,7 @@ export const productosAlquiler = [
         categoria: "menaje",
         precio: 2000,
         unidad: "por día",
-        imagen: IMG.copas,
+        imagen: IMG.champana,
         tiposEvento: ["boda", "quinceañera", "corporativo"],
     },
     {
@@ -302,7 +317,7 @@ export const portafolio = [
         titulo: "Boda Laura & Carlos",
         descripcion: "Boda campestre con detalles rústicos y florales",
         tipoEvento: "boda",
-        imagen: IMG.boda3,
+        imagen: IMG.boda5,
         fecha: "2024-07-22",
         lugar: "Finca Los Olivos, Marinilla",
     },
@@ -370,7 +385,7 @@ export const locaciones = [
         municipio: "Llanogrande",
         capacidad: 200,
         precio: "Consultar",
-        imagen: IMG.salon1,
+        imagen: IMG.lugar1,
         tiposEvento: ["boda", "corporativo", "fiesta"],
     },
     {
@@ -401,7 +416,7 @@ export const locaciones = [
         municipio: "Llanogrande",
         capacidad: 200,
         precio: "Consultar",
-        imagen: IMG.hacienda1,
+        imagen: IMG.lugar2,
         tiposEvento: ["boda", "fiesta"],
     },
     {
@@ -415,7 +430,7 @@ export const locaciones = [
         municipio: "Rionegro",
         capacidad: 80,
         precio: "Consultar",
-        imagen: IMG.hacienda2,
+        imagen: IMG.lugar3,
         tiposEvento: ["fiesta", "corporativo"],
     },
     {
@@ -429,7 +444,7 @@ export const locaciones = [
         municipio: "Rionegro",
         capacidad: 300,
         precio: "Consultar",
-        imagen: IMG.salon1,
+        imagen: IMG.lugar4,
         tiposEvento: [
             "boda", "quinceañera",
             "corporativo", "fiesta",
@@ -446,7 +461,7 @@ export const locaciones = [
         municipio: "Rionegro",
         capacidad: 250,
         precio: "Consultar",
-        imagen: IMG.hacienda3,
+        imagen: IMG.lugar5,
         tiposEvento: ["boda", "corporativo"],
     },
     {
@@ -460,7 +475,7 @@ export const locaciones = [
         municipio: "Llanogrande",
         capacidad: 500,
         precio: "Consultar",
-        imagen: IMG.hacienda1,
+        imagen: IMG.lugar6,
         tiposEvento: ["boda", "quinceañera"],
     },
 ];
@@ -486,7 +501,7 @@ export const paquetes = [
             "8 meseros por 6 horas",
             "Coordinación del día del evento",
         ],
-        imagen: IMG.boda1,
+        imagen: IMG.paq1,
         destacado: false,
     },
     {
@@ -508,7 +523,7 @@ export const paquetes = [
             "Mesa de postres gourmet",
             "Planeación completa pre-evento",
         ],
-        imagen: IMG.boda2,
+        imagen: IMG.paq2,
         destacado: true,
     },
     {
@@ -527,7 +542,7 @@ export const paquetes = [
             "Torta de quince y mesa de postres",
             "Coordinación general",
         ],
-        imagen: IMG.quince1,
+        imagen: IMG.paq3,
         destacado: false,
     },
     {
@@ -545,7 +560,7 @@ export const paquetes = [
             "6 meseros",
             "Decoración personalizada al tema",
         ],
-        imagen: IMG.fiesta1,
+        imagen: IMG.paq4,
         destacado: false,
     },
     {
@@ -563,7 +578,7 @@ export const paquetes = [
             "Ambientación corporativa",
             "Fotografía profesional",
         ],
-        imagen: IMG.corporativo1,
+        imagen: IMG.paq5,
         destacado: false,
     },
 ];
