@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Animado from "@/components/ui/Animado";
 import EncabezadoPagina
     from "@/components/ui/EncabezadoPagina";
-import { paquetes } from "@/data/mock";
+import { getPaquetes } from "@/lib/api";
 import {
     formatearPrecio,
     etiquetaTipoEvento,
 } from "@/lib/utils";
+import type { PaqueteEvento } from "@/types";
 
 const filtros = [
     { valor: "todos", etiqueta: "Todos" },
@@ -23,13 +24,38 @@ export default function PaginaPaquetes() {
     const [filtroActivo, setFiltroActivo] = useState(
         "todos"
     );
+    const [paquetes, setPaquetes] = useState<
+        PaqueteEvento[]
+    >([]);
+    const [cargando, setCargando] = useState(true);
+    const [error, setError] = useState("");
 
-    const paquetesFiltrados =
-        filtroActivo === "todos"
-            ? paquetes
-            : paquetes.filter(
-                (p) => p.tipoEvento === filtroActivo
-            );
+    useEffect(() => {
+        let activo = true;
+
+        getPaquetes(
+            filtroActivo === "todos"
+                ? undefined
+                : filtroActivo
+        )
+            .then((data) => {
+                if (!activo) return;
+                setPaquetes(data);
+                setCargando(false);
+            })
+            .catch(() => {
+                if (!activo) return;
+                setError(
+                    "No se pudieron cargar los paquetes. "
+                    + "Verifica que el backend esté activo."
+                );
+                setCargando(false);
+            });
+
+        return () => {
+            activo = false;
+        };
+    }, [filtroActivo]);
 
     const estiloFiltroBase =
         "px-6 py-2.5 rounded-full font-cuerpo "
@@ -77,9 +103,14 @@ export default function PaginaPaquetes() {
                         {filtros.map((filtro) => (
                             <button
                                 key={filtro.valor}
-                                onClick={() =>
-                                    setFiltroActivo(filtro.valor)
-                                }
+                                onClick={() => {
+                                    if (filtroActivo === filtro.valor) {
+                                        return;
+                                    }
+                                    setCargando(true);
+                                    setError("");
+                                    setFiltroActivo(filtro.valor);
+                                }}
                                 className={
                                     estiloFiltroBase + " "
                                     + (filtroActivo === filtro.valor
@@ -97,13 +128,44 @@ export default function PaginaPaquetes() {
             {/* Paquetes */}
             <section className="pb-24 bg-blanco-calido">
                 <div className="contenedor-principal">
-                    <div
-                        className={
-                            "flex flex-wrap justify-center "
-                            + "gap-6 md:gap-8"
-                        }
-                    >
-                        {paquetesFiltrados.map((paquete, index) => {
+                    {cargando && (
+                        <p className={
+                            "text-center font-cuerpo "
+                            + "text-gris-texto py-20"
+                        }>
+                            Cargando paquetes...
+                        </p>
+                    )}
+
+                    {error && (
+                        <p
+                            role="alert"
+                            className={
+                                "text-center font-cuerpo "
+                                + "text-red-500 py-20"
+                            }
+                        >
+                            {error}
+                        </p>
+                    )}
+
+                    {!cargando && !error && paquetes.length === 0 && (
+                        <p className={
+                            "text-center font-cuerpo "
+                            + "text-gris-texto py-20"
+                        }>
+                            No hay paquetes disponibles para este tipo de evento.
+                        </p>
+                    )}
+
+                    {!cargando && !error && paquetes.length > 0 && (
+                        <div
+                            className={
+                                "flex flex-wrap justify-center "
+                                + "gap-6 md:gap-8"
+                            }
+                        >
+                            {paquetes.map((paquete, index) => {
                             const dest = paquete.destacado;
 
                             const fondoCard = dest
@@ -221,7 +283,7 @@ export default function PaginaPaquetes() {
                                             }
                                         >
                                             {etiquetaTipoEvento(
-                                                paquete.tipoEvento
+                                                paquete.tipo_evento
                                             )}
                                         </span>
                                     </div>
@@ -275,7 +337,7 @@ export default function PaginaPaquetes() {
                                                 }
                                             >
                                                 {formatearPrecio(
-                                                    paquete.precioDesde
+                                                    paquete.precio_desde
                                                 )}
                                             </p>
                                             <p
@@ -286,7 +348,7 @@ export default function PaginaPaquetes() {
                                             >
                                                 hasta{" "}
                                                 {formatearPrecio(
-                                                    paquete.precioHasta
+                                                    paquete.precio_hasta
                                                 )}
                                             </p>
                                         </div>
@@ -348,8 +410,9 @@ export default function PaginaPaquetes() {
                                 </div>
                                 </Animado>
                             );
-                        })}
-                    </div>
+                            })}
+                        </div>
+                    )}
                 </div>
             </section>
         </div>

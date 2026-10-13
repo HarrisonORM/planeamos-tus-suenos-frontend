@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Animado from "@/components/ui/Animado";
 import EncabezadoPagina
     from "@/components/ui/EncabezadoPagina";
-import { locaciones } from "@/data/mock";
+import { getLocaciones } from "@/lib/api";
 import { etiquetaTipoEvento } from "@/lib/utils";
 import { MapPin, Users } from "lucide-react";
+import type { LocacionEvento } from "@/types";
 
 const filtrosMunicipio = [
     { valor: "todos", etiqueta: "Todos" },
@@ -18,13 +19,38 @@ export default function PaginaLocaciones() {
     const [filtroActivo, setFiltroActivo] = useState(
         "todos"
     );
+    const [locaciones, setLocaciones] = useState<
+        LocacionEvento[]
+    >([]);
+    const [cargando, setCargando] = useState(true);
+    const [error, setError] = useState("");
 
-    const locacionesFiltradas =
-        filtroActivo === "todos"
-            ? locaciones
-            : locaciones.filter(
-                (l) => l.municipio === filtroActivo
-            );
+    useEffect(() => {
+        let activo = true;
+
+        getLocaciones(
+            filtroActivo === "todos"
+                ? undefined
+                : filtroActivo
+        )
+            .then((data) => {
+                if (!activo) return;
+                setLocaciones(data);
+                setCargando(false);
+            })
+            .catch(() => {
+                if (!activo) return;
+                setError(
+                    "No se pudieron cargar las locaciones. "
+                    + "Verifica que el backend esté activo."
+                );
+                setCargando(false);
+            });
+
+        return () => {
+            activo = false;
+        };
+    }, [filtroActivo]);
 
     const estiloFiltroBase =
         "px-6 py-2.5 rounded-full font-cuerpo "
@@ -72,9 +98,14 @@ export default function PaginaLocaciones() {
                         {filtrosMunicipio.map((filtro) => (
                             <button
                                 key={filtro.valor}
-                                onClick={() =>
-                                    setFiltroActivo(filtro.valor)
-                                }
+                                onClick={() => {
+                                    if (filtroActivo === filtro.valor) {
+                                        return;
+                                    }
+                                    setCargando(true);
+                                    setError("");
+                                    setFiltroActivo(filtro.valor);
+                                }}
                                 className={
                                     estiloFiltroBase + " "
                                     + (filtroActivo === filtro.valor
@@ -92,14 +123,45 @@ export default function PaginaLocaciones() {
             {/* Locaciones */}
             <section className="pb-24 bg-blanco-calido">
                 <div className="contenedor-principal">
-                    <div
-                        className={
-                            "grid grid-cols-1 "
-                            + "md:grid-cols-2 "
-                            + "lg:grid-cols-3 gap-6"
-                        }
-                    >
-                        {locacionesFiltradas.map((loc, index) => (
+                    {cargando && (
+                        <p className={
+                            "text-center font-cuerpo "
+                            + "text-gris-texto py-20"
+                        }>
+                            Cargando locaciones...
+                        </p>
+                    )}
+
+                    {error && (
+                        <p
+                            role="alert"
+                            className={
+                                "text-center font-cuerpo "
+                                + "text-red-500 py-20"
+                            }
+                        >
+                            {error}
+                        </p>
+                    )}
+
+                    {!cargando && !error && locaciones.length === 0 && (
+                        <p className={
+                            "text-center font-cuerpo "
+                            + "text-gris-texto py-20"
+                        }>
+                            No hay locaciones disponibles para esta zona.
+                        </p>
+                    )}
+
+                    {!cargando && !error && locaciones.length > 0 && (
+                        <div
+                            className={
+                                "grid grid-cols-1 "
+                                + "md:grid-cols-2 "
+                                + "lg:grid-cols-3 gap-6"
+                            }
+                        >
+                            {locaciones.map((loc, index) => (
                             <Animado key={loc.id} delay={index * 0.1}>
                                 <div
                                     className={
@@ -206,7 +268,7 @@ export default function PaginaLocaciones() {
                                             + "gap-1.5 mb-4"
                                         }
                                     >
-                                        {loc.tiposEvento.map(
+                                        {loc.tipos_evento.map(
                                             (tipo) => (
                                                 <span
                                                     key={tipo}
@@ -261,8 +323,9 @@ export default function PaginaLocaciones() {
                                 </div>
                             </div>
                             </Animado>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
         </div>

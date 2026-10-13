@@ -1,26 +1,53 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Animado from "@/components/ui/Animado";
 import Link from "next/link";
 import {
   serviciosPersonales,
   portafolio,
-  paquetes,
 } from "@/data/mock";
+import { getPaquetes } from "@/lib/api";
 import {
   formatearPrecio,
   etiquetaTipoEvento,
   etiquetaCategoria,
 } from "@/lib/utils";
+import type { PaqueteEvento } from "@/types";
 
 export default function PaginaInicio() {
+  const [paquetes, setPaquetes] = useState<PaqueteEvento[]>([]);
+  const [cargandoPaquetes, setCargandoPaquetes] = useState(true);
+  const [errorPaquetes, setErrorPaquetes] = useState(false);
+
+  useEffect(() => {
+  let activo = true;
+
+  getPaquetes()
+    .then((data) => {
+      if (!activo) return;
+      setPaquetes(data);
+      setCargandoPaquetes(false);
+    })
+    .catch(() => {
+      if (!activo) return;
+      setErrorPaquetes(true);
+      setCargandoPaquetes(false);
+    });
+
+  return () => {
+    activo = false;
+  };
+  }, []);
+
   const serviciosDestacados = serviciosPersonales.slice(0, 6);
   const portafolioPreview = portafolio.slice(0, 3);
-  const noDestacados = paquetes.filter((p) => !p.destacado);
+  const destacados = paquetes.filter((p) => p.destacado).slice(0, 3);
   const paquetesDestacados = [
-    noDestacados[0],
-    ...paquetes.filter((p) => p.destacado),
-    noDestacados[1],
+  ...destacados,
+  ...paquetes
+    .filter((p) => !p.destacado)
+    .slice(0, 3 - destacados.length),
   ];
 
   // Estilos reutilizables
@@ -348,10 +375,26 @@ export default function PaginaInicio() {
           </Animado>
 
           <Animado delay={0.2}>
-            <div className={
-              "grid grid-cols-1 md:grid-cols-2 "
-              + "lg:grid-cols-3 gap-6 items-stretch"
-            }>
+            {cargandoPaquetes ? (
+              <p className="py-12 text-center font-cuerpo text-gris-texto">
+                Cargando paquetes...
+              </p>
+            ) : errorPaquetes ? (
+              <p
+                role="alert"
+                className="py-12 text-center font-cuerpo text-red-500"
+              >
+                No se pudieron cargar los paquetes destacados.
+              </p>
+            ) : paquetesDestacados.length === 0 ? (
+              <p className="py-12 text-center font-cuerpo text-gris-texto">
+                Pronto publicaremos nuestros paquetes.
+              </p>
+            ) : (
+              <div className={
+                "grid grid-cols-1 md:grid-cols-2 "
+                + "lg:grid-cols-3 gap-6 items-stretch"
+              }>
               {paquetesDestacados.map((paquete) => {
                 const esDest = paquete.destacado;
                 const fondoCard = esDest
@@ -419,7 +462,7 @@ export default function PaginaInicio() {
                         + "text-xs tracking-wider uppercase "
                         + "px-3 py-1 rounded-full"
                       }>
-                        {etiquetaTipoEvento(paquete.tipoEvento)}
+                        {etiquetaTipoEvento(paquete.tipo_evento)}
                       </span>
                     </div>
 
@@ -441,7 +484,7 @@ export default function PaginaInicio() {
                           Inversión desde
                         </p>
                         <p className={"font-titulo text-3xl " + colorPrecio}>
-                          {formatearPrecio(paquete.precioDesde)}
+                          {formatearPrecio(paquete.precio_desde)}
                         </p>
                       </div>
 
@@ -492,7 +535,8 @@ export default function PaginaInicio() {
                   </div>
                 );
               })}
-            </div>
+              </div>
+            )}
           </Animado>
 
           <Animado delay={0.3}>

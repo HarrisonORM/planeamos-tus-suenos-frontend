@@ -1,19 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import EncabezadoPagina
     from "@/components/ui/EncabezadoPagina";
 import Animado from "@/components/ui/Animado";
 import {
+    crearReserva,
+    getFechasOcupadas,
     getProductos,
     getServicios,
+    iniciarPagoAnticipo,
 } from "@/lib/api";
 import {
     formatearPrecio,
     etiquetaCategoria,
 } from "@/lib/utils";
 import type {
+    RespuestaReserva,
     ProductoAlquiler,
     ServicioPersonal,
 } from "@/types";
@@ -23,7 +26,10 @@ import {
     Minus,
     Trash2,
     Send,
+    CalendarDays,
+    LoaderCircle,
 } from "lucide-react";
+import type { FormEvent } from "react";
 
 // Tipo para items seleccionados
 interface ItemSeleccionado {
@@ -46,22 +52,141 @@ export default function PaginaCotizador() {
     const [seleccionados, setSeleccionados] =
         useState<ItemSeleccionado[]>([]);
     const [tabActivo, setTabActivo] = useState<"productos" | "servicios">("productos");
+    const [fechasOcupadas, setFechasOcupadas] = useState<string[]>([]);
+    const [cargandoFechas, setCargandoFechas] = useState(true);
+    const [errorFechas, setErrorFechas] = useState("");
+    const [mostrarFormularioReserva, setMostrarFormularioReserva] =
+        useState(false);
+    const [datosReserva, setDatosReserva] = useState({
+        nombre_cliente: "",
+        telefono: "",
+        correo: "",
+        direccion: "",
+        fecha_evento: "",
+        descripcion: "",
+    });
+    const [enviandoReserva, setEnviandoReserva] = useState(false);
+    const [errorReserva, setErrorReserva] = useState("");
+    const [reservaCreada, setReservaCreada] =
+        useState<RespuestaReserva | null>(null);
+    const [iniciandoPago, setIniciandoPago] = useState(false);
 
     // Cargar datos del backend
     useEffect(() => {
+        let activo = true;
         Promise.all([
             getProductos(),
             getServicios(),
         ])
             .then(([prods, servs]) => {
+                if (!activo) return;
                 setProductos(prods);
                 setServicios(servs);
                 setCargando(false);
             })
             .catch(() => {
+                if (!activo) return;
                 setCargando(false);
             });
+
+        return () => {
+            activo = false;
+        };
     }, []);
+
+    useEffect(() => {
+        let activo = true;
+        getFechasOcupadas()
+            .then((fechas) => {
+                if (!activo) return;
+                setFechasOcupadas(fechas);
+                setCargandoFechas(false);
+            })
+            .catch(() => {
+                if (!activo) return;
+                setErrorFechas(
+                    "No se pudo consultar la disponibilidad. "
+                    + "Intenta de nuevo más tarde."
+                );
+                setCargandoFechas(false);
+            });
+
+        return () => {
+            activo = false;
+        };
+    }, []);
+
+    const fechaMinima = (() => {
+        const hoy = new Date();
+        const año = hoy.getFullYear();
+        const mes = String(hoy.getMonth() + 1).padStart(2, "0");
+        const dia = String(hoy.getDate()).padStart(2, "0");
+        return `${año}-${mes}-${dia}`;
+    })();
+
+    const enviarSolicitudReserva = async (
+        evento: FormEvent<HTMLFormElement>
+    ) => {
+        evento.preventDefault();
+        setErrorReserva("");
+
+        if (seleccionados.length === 0) {
+            setErrorReserva(
+                "Agrega al menos un producto o servicio."
+            );
+            return;
+        }
+        if (fechasOcupadas.includes(datosReserva.fecha_evento)) {
+            setErrorReserva(
+                "La fecha seleccionada ya está ocupada. "
+                + "Elige otra fecha."
+            );
+            return;
+        }
+
+        setEnviandoReserva(true);
+        try {
+            const respuesta = await crearReserva({
+                ...datosReserva,
+                items: seleccionados.map((item) => ({
+                    id: item.id,
+                    tipo: item.tipo,
+                    cantidad: item.cantidad,
+                })),
+            });
+            setReservaCreada(respuesta);
+            setMostrarFormularioReserva(false);
+        } catch (error) {
+            setErrorReserva(
+                error instanceof Error
+                    ? error.message
+                    : "No se pudo enviar la solicitud de reserva."
+            );
+        } finally {
+            setEnviandoReserva(false);
+        }
+    };
+
+    const pagarAnticipo = async () => {
+        if (!reservaCreada) return;
+        setErrorReserva("");
+        setIniciandoPago(true);
+
+        try {
+            const checkout = await iniciarPagoAnticipo(
+                reservaCreada.token_pago
+            );
+            window.location.assign(checkout.checkout_url);
+        } catch (error) {
+            setErrorReserva(
+                error instanceof Error
+                    ? error.message
+                    : "No se pudo iniciar el pago del anticipo."
+            );
+        } finally {
+            setIniciandoPago(false);
+        }
+    };
 
     // Agregar item
     const agregar = (
@@ -745,13 +870,24 @@ export default function PaginaCotizador() {
 
                                         {/* Botones */}
                                         <div className="space-y-3">
-                                            <Link
-                                                href="/contacto"
+                                            <button
+                                                type="button"
+                                                disabled={
+                                                    seleccionados.length === 0
+                                                    || cargandoFechas
+                                                    || Boolean(errorFechas)
+                                                }
+                                                onClick={() => {
+                                                    setErrorReserva("");
+                                                    setMostrarFormularioReserva(true);
+                                                }}
                                                 className={
                                                     "flex items-center "
                                                     + "justify-center gap-2 "
                                                     + "w-full bg-durazno "
                                                     + "hover:bg-durazno-oscuro "
+                                                    + "disabled:opacity-50 "
+                                                    + "disabled:cursor-not-allowed "
                                                     + "text-negro-elegante "
                                                     + "font-cuerpo "
                                                     + "font-semibold py-3 "
@@ -763,8 +899,8 @@ export default function PaginaCotizador() {
                                                 }
                                             >
                                                 <Send size={14} />
-                                                Solicitar cotización
-                                            </Link>
+                                                Solicitar reserva
+                                            </button>
                                             <button
                                                 onClick={limpiarTodo}
                                                 className={
@@ -784,6 +920,360 @@ export default function PaginaCotizador() {
                             </div>
                         </div>
                     </div>
+
+                    {reservaCreada ? (
+                        <section
+                            className={
+                                "mt-10 max-w-3xl mx-auto "
+                                + "bg-blanco-puro border "
+                                + "border-durazno/30 "
+                                + "rounded-tarjeta p-6 md:p-8 "
+                                + "shadow-suave"
+                            }
+                        >
+                            <div className="flex items-start gap-4">
+                                <div className={
+                                    "p-3 rounded-full "
+                                    + "bg-verde-claro text-verde"
+                                }>
+                                    <CalendarDays size={24} />
+                                </div>
+                                <div className="flex-1">
+                                    <h2 className={
+                                        "font-titulo text-2xl "
+                                        + "text-negro-elegante"
+                                    }>
+                                        Solicitud recibida
+                                    </h2>
+                                    <p className={
+                                        "font-cuerpo text-sm "
+                                        + "text-gris-texto mt-2"
+                                    }>
+                                        El total estimado validado por
+                                        el servidor es{" "}
+                                        <strong className="text-verde">
+                                            {formatearPrecio(
+                                                reservaCreada.valor_total
+                                            )}
+                                        </strong>
+                                        . El equipo revisará tu solicitud
+                                        y confirmará el anticipo antes
+                                        de habilitar el pago.
+                                    </p>
+                                    <button
+                                        type="button"
+                                        onClick={pagarAnticipo}
+                                        disabled={iniciandoPago}
+                                        className={
+                                            "mt-5 inline-flex "
+                                            + "items-center justify-center "
+                                            + "gap-2 bg-verde "
+                                            + "hover:bg-verde-oscuro "
+                                            + "disabled:opacity-60 "
+                                            + "text-blanco-calido "
+                                            + "font-cuerpo font-semibold "
+                                            + "px-6 py-3 rounded-boton "
+                                            + "transition-colors"
+                                        }
+                                    >
+                                        {iniciandoPago
+                                            ? <LoaderCircle
+                                                size={16}
+                                                className="animate-spin"
+                                            />
+                                            : <Send size={16} />}
+                                        Pagar anticipo
+                                    </button>
+                                    {errorReserva && (
+                                        <p
+                                            role="alert"
+                                            className={
+                                                "font-cuerpo text-sm "
+                                                + "text-red-600 mt-3"
+                                            }
+                                        >
+                                            {errorReserva}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        </section>
+                    ) : mostrarFormularioReserva && (
+                        <section
+                            id="reserva-form"
+                            className={
+                                "mt-10 max-w-3xl mx-auto "
+                                + "bg-blanco-puro border "
+                                + "border-durazno/30 "
+                                + "rounded-tarjeta p-6 md:p-8 "
+                                + "shadow-suave"
+                            }
+                        >
+                            <h2 className={
+                                "font-titulo text-3xl "
+                                + "text-negro-elegante mb-2"
+                            }>
+                                Solicita tu reserva
+                            </h2>
+                            <p className={
+                                "font-cuerpo text-sm "
+                                + "text-gris-texto mb-6"
+                            }>
+                                Revisaremos disponibilidad y
+                                confirmaremos el anticipo. El total
+                                definitivo se calcula con los precios
+                                vigentes del catálogo.
+                            </p>
+
+                            {errorFechas ? (
+                                <p role="alert" className={
+                                    "font-cuerpo text-sm "
+                                    + "text-red-600"
+                                }>
+                                    {errorFechas}
+                                </p>
+                            ) : cargandoFechas ? (
+                                <p className={
+                                    "font-cuerpo text-sm "
+                                    + "text-gris-texto"
+                                }>
+                                    Consultando disponibilidad...
+                                </p>
+                            ) : (
+                                <>
+                                    <p className={
+                                        "font-cuerpo text-xs "
+                                        + "text-gris-texto mb-5"
+                                    }>
+                                        Fechas ocupadas:{" "}
+                                        {fechasOcupadas.length
+                                            ? fechasOcupadas.join(", ")
+                                            : "aún no hay fechas reportadas"}
+                                    </p>
+                                    <form
+                                        onSubmit={enviarSolicitudReserva}
+                                        className="space-y-5"
+                                    >
+                                        <div className={
+                                            "grid grid-cols-1 "
+                                            + "md:grid-cols-2 gap-4"
+                                        }>
+                                            <label className={
+                                                "font-cuerpo text-sm "
+                                                + "text-negro-suave"
+                                            }>
+                                                Nombre completo
+                                                <input
+                                                    required
+                                                    maxLength={200}
+                                                    autoComplete="name"
+                                                    value={datosReserva.nombre_cliente}
+                                                    onChange={(evento) =>
+                                                        setDatosReserva({
+                                                            ...datosReserva,
+                                                            nombre_cliente:
+                                                                evento.target.value,
+                                                        })
+                                                    }
+                                                    className={
+                                                        "mt-1 w-full "
+                                                        + "border border-gris-borde "
+                                                        + "rounded-boton px-3 py-2 "
+                                                        + "bg-blanco-calido "
+                                                        + "focus:outline-verde"
+                                                    }
+                                                />
+                                            </label>
+                                            <label className={
+                                                "font-cuerpo text-sm "
+                                                + "text-negro-suave"
+                                            }>
+                                                Teléfono
+                                                <input
+                                                    required
+                                                    type="tel"
+                                                    maxLength={20}
+                                                    autoComplete="tel"
+                                                    value={datosReserva.telefono}
+                                                    onChange={(evento) =>
+                                                        setDatosReserva({
+                                                            ...datosReserva,
+                                                            telefono:
+                                                                evento.target.value,
+                                                        })
+                                                    }
+                                                    className={
+                                                        "mt-1 w-full "
+                                                        + "border border-gris-borde "
+                                                        + "rounded-boton px-3 py-2 "
+                                                        + "bg-blanco-calido "
+                                                        + "focus:outline-verde"
+                                                    }
+                                                />
+                                            </label>
+                                            <label className={
+                                                "font-cuerpo text-sm "
+                                                + "text-negro-suave"
+                                            }>
+                                                Correo electrónico
+                                                <input
+                                                    required
+                                                    type="email"
+                                                    maxLength={254}
+                                                    autoComplete="email"
+                                                    value={datosReserva.correo}
+                                                    onChange={(evento) =>
+                                                        setDatosReserva({
+                                                            ...datosReserva,
+                                                            correo:
+                                                                evento.target.value,
+                                                        })
+                                                    }
+                                                    className={
+                                                        "mt-1 w-full "
+                                                        + "border border-gris-borde "
+                                                        + "rounded-boton px-3 py-2 "
+                                                        + "bg-blanco-calido "
+                                                        + "focus:outline-verde"
+                                                    }
+                                                />
+                                            </label>
+                                            <label className={
+                                                "font-cuerpo text-sm "
+                                                + "text-negro-suave"
+                                            }>
+                                                Fecha del evento
+                                                <input
+                                                    required
+                                                    type="date"
+                                                    min={fechaMinima}
+                                                    value={datosReserva.fecha_evento}
+                                                    onChange={(evento) =>
+                                                        setDatosReserva({
+                                                            ...datosReserva,
+                                                            fecha_evento:
+                                                                evento.target.value,
+                                                        })
+                                                    }
+                                                    className={
+                                                        "mt-1 w-full "
+                                                        + "border border-gris-borde "
+                                                        + "rounded-boton px-3 py-2 "
+                                                        + "bg-blanco-calido "
+                                                        + "focus:outline-verde"
+                                                    }
+                                                />
+                                            </label>
+                                        </div>
+                                        <label className={
+                                            "block font-cuerpo text-sm "
+                                            + "text-negro-suave"
+                                        }>
+                                            Dirección del evento
+                                            <input
+                                                maxLength={1000}
+                                                value={datosReserva.direccion}
+                                                onChange={(evento) =>
+                                                    setDatosReserva({
+                                                        ...datosReserva,
+                                                        direccion:
+                                                            evento.target.value,
+                                                    })
+                                                }
+                                                className={
+                                                    "mt-1 w-full "
+                                                    + "border border-gris-borde "
+                                                    + "rounded-boton px-3 py-2 "
+                                                    + "bg-blanco-calido "
+                                                    + "focus:outline-verde"
+                                                }
+                                            />
+                                        </label>
+                                        <label className={
+                                            "block font-cuerpo text-sm "
+                                            + "text-negro-suave"
+                                        }>
+                                            Detalles adicionales
+                                            <textarea
+                                                rows={3}
+                                                maxLength={2000}
+                                                value={datosReserva.descripcion}
+                                                onChange={(evento) =>
+                                                    setDatosReserva({
+                                                        ...datosReserva,
+                                                        descripcion:
+                                                            evento.target.value,
+                                                    })
+                                                }
+                                                className={
+                                                    "mt-1 w-full resize-y "
+                                                    + "border border-gris-borde "
+                                                    + "rounded-boton px-3 py-2 "
+                                                    + "bg-blanco-calido "
+                                                    + "focus:outline-verde"
+                                                }
+                                            />
+                                        </label>
+                                        {errorReserva && (
+                                            <p
+                                                role="alert"
+                                                className={
+                                                    "font-cuerpo text-sm "
+                                                    + "text-red-600"
+                                                }
+                                            >
+                                                {errorReserva}
+                                            </p>
+                                        )}
+                                        <div className={
+                                            "flex flex-col-reverse "
+                                            + "sm:flex-row sm:justify-end "
+                                            + "gap-3"
+                                        }>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setMostrarFormularioReserva(false);
+                                                    setErrorReserva("");
+                                                }}
+                                                className={
+                                                    "font-cuerpo text-sm "
+                                                    + "text-gris-texto "
+                                                    + "hover:text-negro-elegante "
+                                                    + "px-5 py-3"
+                                                }
+                                            >
+                                                Cancelar
+                                            </button>
+                                            <button
+                                                type="submit"
+                                                disabled={enviandoReserva}
+                                                className={
+                                                    "inline-flex items-center "
+                                                    + "justify-center gap-2 "
+                                                    + "bg-verde "
+                                                    + "hover:bg-verde-oscuro "
+                                                    + "disabled:opacity-60 "
+                                                    + "text-blanco-calido "
+                                                    + "font-cuerpo font-semibold "
+                                                    + "px-6 py-3 rounded-boton "
+                                                    + "transition-colors"
+                                                }
+                                            >
+                                                {enviandoReserva
+                                                    ? <LoaderCircle
+                                                        size={16}
+                                                        className="animate-spin"
+                                                    />
+                                                    : <Send size={16} />}
+                                                Enviar solicitud
+                                            </button>
+                                        </div>
+                                    </form>
+                                </>
+                            )}
+                        </section>
+                    )}
                 </div>
             </section>
         </div>
