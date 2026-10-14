@@ -8,6 +8,7 @@ import {
   serviciosPersonales,
   portafolio,
 } from "@/data/mock";
+import { imagenesServicios } from "@/data/imagenesServicios";
 import { getPaquetes } from "@/lib/api";
 import {
   formatearPrecio,
@@ -195,7 +196,10 @@ export default function PaginaInicio() {
                 >
                   <div className="h-48 overflow-hidden">
                     <img
-                      src={servicio.imagen}
+                      src={
+                        imagenesServicios[servicio.nombre]
+                        ?? servicio.imagen
+                      }
                       alt={servicio.nombre}
                       className={
                         "w-full h-full object-cover "
