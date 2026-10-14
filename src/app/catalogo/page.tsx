@@ -1,9 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { ZoomIn } from "lucide-react";
 import Animado from "@/components/ui/Animado";
 import EncabezadoPagina
     from "@/components/ui/EncabezadoPagina";
+import VisorImagen, {
+    type ImagenVisor,
+} from "@/components/ui/VisorImagen";
+import { imagenesCatalogo } from "@/data/imagenesCatalogo";
 import { getProductos } from "@/lib/api";
 import {
     formatearPrecio,
@@ -35,6 +40,9 @@ export default function PaginaCatalogo() {
     >([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
+    const [visor, setVisor] = useState<
+        ImagenVisor | null
+    >(null);
 
     useEffect(() => {
         setCargando(true);
@@ -184,8 +192,36 @@ export default function PaginaCatalogo() {
                                             + "relative group"
                                         }
                                     >
+                                        <button
+                                            type="button"
+                                            aria-label={
+                                                "Ampliar imagen de "
+                                                + producto.nombre
+                                            }
+                                            onClick={() =>
+                                                setVisor({
+                                                    src:
+                                                        imagenesCatalogo[
+                                                            producto.nombre
+                                                        ]
+                                                        ?? producto.imagen,
+                                                    alt: producto.nombre,
+                                                })
+                                            }
+                                            className={
+                                                "block w-full h-full "
+                                                + "cursor-zoom-in "
+                                                + "focus-visible:outline-2 "
+                                                + "focus-visible:outline-verde "
+                                                + "focus-visible:-outline-offset-2"
+                                            }
+                                        >
                                         <img
-                                            src={producto.imagen}
+                                            src={
+                                                imagenesCatalogo[
+                                                    producto.nombre
+                                                ] ?? producto.imagen
+                                            }
                                             alt={producto.nombre}
                                             className={
                                                 "w-full h-full "
@@ -195,6 +231,26 @@ export default function PaginaCatalogo() {
                                                 + "group-hover:scale-105"
                                             }
                                         />
+                                        </button>
+                                        <span
+                                            aria-hidden="true"
+                                            className={
+                                                "pointer-events-none "
+                                                + "absolute bottom-3 "
+                                                + "right-3 w-9 h-9 "
+                                                + "rounded-full "
+                                                + "bg-blanco-calido/90 "
+                                                + "text-negro-elegante "
+                                                + "flex items-center "
+                                                + "justify-center "
+                                                + "opacity-0 "
+                                                + "group-hover:opacity-100 "
+                                                + "transition-opacity "
+                                                + "duration-300"
+                                            }
+                                        >
+                                            <ZoomIn size={16} />
+                                        </span>
                                         <div
                                             className={
                                                 "absolute top-4 left-4"
@@ -335,6 +391,10 @@ export default function PaginaCatalogo() {
                     )}
                 </div>
             </section>
+            <VisorImagen
+                imagen={visor}
+                onCerrar={() => setVisor(null)}
+            />
         </div>
     );
 }
