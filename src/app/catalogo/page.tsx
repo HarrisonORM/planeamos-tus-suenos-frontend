@@ -171,6 +171,7 @@ export default function PaginaCatalogo() {
                                 <Animado
                                     key={producto.id}
                                     delay={index * 0.1}
+                                    className="h-full"
                                 >
                                     <div
                                         className={
@@ -183,7 +184,7 @@ export default function PaginaCatalogo() {
                                             + "hover:-translate-y-1 "
                                             + "transition-all "
                                             + "duration-300 "
-                                            + "flex flex-col"
+                                            + "h-full flex flex-col"
                                         }
                                     >
                                     <div
@@ -226,6 +227,7 @@ export default function PaginaCatalogo() {
                                             className={
                                                 "w-full h-full "
                                                 + "object-cover "
+                                                + "object-center "
                                                 + "transition-transform "
                                                 + "duration-500 "
                                                 + "group-hover:scale-105"

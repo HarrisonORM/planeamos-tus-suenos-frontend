@@ -4,6 +4,7 @@ import { useState } from "react";
 import EncabezadoPagina
     from "@/components/ui/EncabezadoPagina";
 import Animado from "@/components/ui/Animado";
+import { telefonoVisible } from "@/lib/contacto";
 import {
     enviarMensaje,
     enviarCotizacion,
@@ -317,7 +318,7 @@ export default function PaginaContacto() {
                                                     + "text-gris-texto"
                                                 }
                                             >
-                                                +57 300 000 0000
+                                                {telefonoVisible}
                                             </p>
                                         </div>
                                     </div>

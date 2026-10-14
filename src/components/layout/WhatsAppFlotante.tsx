@@ -4,6 +4,7 @@ import {
     useState,
     useEffect,
 } from "react";
+import { whatsappNumero } from "@/lib/contacto";
 
 export default function WhatsAppFlotante() {
     const [visible, setVisible] = useState(false);
@@ -18,7 +19,7 @@ export default function WhatsAppFlotante() {
         };
     }, []);
 
-    const numero = "573000000000";
+    const numero = whatsappNumero;
     const texto =
         "Hola, me interesa conocer más "
         + "sobre sus servicios para un evento.";

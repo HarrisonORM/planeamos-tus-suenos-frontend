@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import VisorImagen, {
+    type ImagenVisor,
+} from "@/components/ui/VisorImagen";
 import Animado from "@/components/ui/Animado";
 import EncabezadoPagina
     from "@/components/ui/EncabezadoPagina";
@@ -26,6 +29,9 @@ export default function PaginaLocaciones() {
     >([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
+    const [visor, setVisor] = useState<
+        ImagenVisor | null
+    >(null);
 
     useEffect(() => {
         let activo = true;
@@ -164,7 +170,11 @@ export default function PaginaLocaciones() {
                             }
                         >
                             {locaciones.map((loc, index) => (
-                            <Animado key={loc.id} delay={index * 0.1}>
+                            <Animado
+                                key={loc.id}
+                                delay={index * 0.1}
+                                className="h-full"
+                            >
                                 <div
                                     className={
                                         "bg-blanco-puro "
@@ -175,7 +185,7 @@ export default function PaginaLocaciones() {
                                         + "hover:shadow-elegante "
                                         + "hover:-translate-y-1 "
                                         + "transition-all duration-300 "
-                                        + "flex flex-col"
+                                        + "h-full flex flex-col"
                                     }
                                 >
                                 {/* Imagen */}
@@ -185,6 +195,29 @@ export default function PaginaLocaciones() {
                                         + "relative group"
                                     }
                                 >
+                                    <button
+                                        type="button"
+                                        aria-label={
+                                            "Ampliar imagen de "
+                                            + loc.nombre
+                                        }
+                                        onClick={() =>
+                                            setVisor({
+                                                src:
+                                                    imagenesLocaciones[
+                                                        loc.nombre
+                                                    ] ?? loc.imagen,
+                                                alt: loc.nombre,
+                                            })
+                                        }
+                                        className={
+                                            "block w-full h-full "
+                                            + "cursor-zoom-in "
+                                            + "focus-visible:outline-2 "
+                                            + "focus-visible:outline-verde "
+                                            + "focus-visible:-outline-offset-2"
+                                        }
+                                    >
                                     <img
                                         src={
                                             imagenesLocaciones[
@@ -195,14 +228,17 @@ export default function PaginaLocaciones() {
                                         className={
                                             "w-full h-full "
                                             + "object-cover "
+                                            + "object-center "
                                             + "transition-transform "
                                             + "duration-500 "
                                             + "group-hover:scale-105"
                                         }
                                     />
+                                    </button>
                                     <div
                                         className={
-                                            "absolute inset-0 "
+                                            "pointer-events-none "
+                                            + "absolute inset-0 "
                                             + "bg-gradient-to-t "
                                             + "from-negro-elegante/40 "
                                             + "to-transparent"
@@ -334,6 +370,10 @@ export default function PaginaLocaciones() {
                     )}
                 </div>
             </section>
+            <VisorImagen
+                imagen={visor}
+                onCerrar={() => setVisor(null)}
+            />
         </div>
     );
 }

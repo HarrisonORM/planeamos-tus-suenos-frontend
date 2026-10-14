@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import VisorImagen, {
+    type ImagenVisor,
+} from "@/components/ui/VisorImagen";
 import Animado from "@/components/ui/Animado";
 import EncabezadoPagina
     from "@/components/ui/EncabezadoPagina";
@@ -30,6 +33,9 @@ export default function PaginaPortafolio() {
     );
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
+    const [visor, setVisor] = useState<
+        ImagenVisor | null
+    >(null);
 
     useEffect(() => {
         setCargando(true);
@@ -182,11 +188,35 @@ export default function PaginaPortafolio() {
                                     }
                                 >
                                     <div
+                                        role="button"
+                                        tabIndex={0}
+                                        aria-label={
+                                            "Ampliar imagen de "
+                                            + evento.titulo
+                                        }
+                                        onClick={() =>
+                                            setVisor({
+                                                src: evento.imagen,
+                                                alt: evento.titulo,
+                                            })
+                                        }
+                                        onKeyDown={(e) => {
+                                            if (
+                                                e.key === "Enter"
+                                                || e.key === " "
+                                            ) {
+                                                e.preventDefault();
+                                                setVisor({
+                                                    src: evento.imagen,
+                                                    alt: evento.titulo,
+                                                });
+                                            }
+                                        }}
                                         className={
                                             "group relative "
                                             + "overflow-hidden "
                                             + "rounded-tarjeta "
-                                            + "cursor-pointer "
+                                            + "cursor-zoom-in "
                                             + "h-[400px] lg:h-full"
                                         }
                                     >
@@ -196,6 +226,7 @@ export default function PaginaPortafolio() {
                                         className={
                                             "w-full h-full "
                                             + "object-cover "
+                                            + "object-center "
                                             + "transition-transform "
                                             + "duration-700 "
                                             + "group-hover:scale-110"
@@ -279,6 +310,10 @@ export default function PaginaPortafolio() {
                     )}
                 </div>
             </section>
+            <VisorImagen
+                imagen={visor}
+                onCerrar={() => setVisor(null)}
+            />
         </div>
     );
 }

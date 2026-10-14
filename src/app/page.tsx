@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Animado from "@/components/ui/Animado";
+import { whatsappUrl } from "@/lib/contacto";
 import Link from "next/link";
 import {
   serviciosPersonales,
@@ -613,7 +614,7 @@ export default function PaginaInicio() {
                   Cotizar mi evento
                 </Link>
                 <a
-                  href="https://wa.me/573000000000"
+                  href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={

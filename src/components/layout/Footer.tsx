@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { telefonoVisible } from "@/lib/contacto";
 import { Phone, Mail, MapPin } from "lucide-react";
 
 export default function Footer() {
@@ -141,7 +142,7 @@ export default function Footer() {
                                 className={"flex items-start gap-3 " + "text-blanco-calido/70"}
                             >
                                 <Phone size={16} className="text-verde mt-0.5 flex-shrink-0" />
-                                <span>+57 300 000 0000</span>
+                                <span>{telefonoVisible}</span>
                             </li>
                             <li
                                 className={"flex items-start gap-3 " + "text-blanco-calido/70"}

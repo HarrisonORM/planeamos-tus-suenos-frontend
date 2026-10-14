@@ -1,10 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { ZoomIn } from "lucide-react";
+import VisorImagen, {
+    type ImagenVisor,
+} from "@/components/ui/VisorImagen";
 import Animado from "@/components/ui/Animado";
 import EncabezadoPagina
     from "@/components/ui/EncabezadoPagina";
 import { getServicios } from "@/lib/api";
+import { imagenesServicios } from "@/data/imagenesServicios";
 import {
     formatearPrecio,
     etiquetaCategoria,
@@ -28,6 +33,9 @@ export default function PaginaServicios() {
     const [servicios, setServicios] = useState<
         ServicioPersonal[]
     >([]);
+    const [visor, setVisor] = useState<
+        ImagenVisor | null
+    >(null);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
 
@@ -155,6 +163,7 @@ export default function PaginaServicios() {
                                 <Animado
                                     key={servicio.id}
                                     delay={index * 0.1}
+                                    className="h-full"
                                 >
                                     <div
                                         className={
@@ -167,7 +176,7 @@ export default function PaginaServicios() {
                                             + "hover:-translate-y-1 "
                                             + "transition-all "
                                             + "duration-300 "
-                                            + "flex flex-col"
+                                            + "h-full flex flex-col"
                                         }
                                     >
                                     <div
@@ -176,17 +185,63 @@ export default function PaginaServicios() {
                                             + "relative group"
                                         }
                                     >
+                                        <button
+                                            type="button"
+                                            aria-label={
+                                                "Ampliar imagen de "
+                                                + servicio.nombre
+                                            }
+                                            onClick={() =>
+                                                setVisor({
+                                                    src:
+                                                        imagenesServicios[servicio.nombre]
+                                                        ?? servicio.imagen,
+                                                    alt: servicio.nombre,
+                                                })
+                                            }
+                                            className={
+                                                "block w-full h-full "
+                                                + "cursor-zoom-in "
+                                                + "focus-visible:outline-2 "
+                                                + "focus-visible:outline-verde "
+                                                + "focus-visible:-outline-offset-2"
+                                            }
+                                        >
                                         <img
-                                            src={servicio.imagen}
+                                            src={
+                                                imagenesServicios[servicio.nombre]
+                                                ?? servicio.imagen
+                                            }
                                             alt={servicio.nombre}
                                             className={
                                                 "w-full h-full "
                                                 + "object-cover "
+                                                + "object-center "
                                                 + "transition-transform "
                                                 + "duration-500 "
                                                 + "group-hover:scale-105"
                                             }
                                         />
+                                        </button>
+                                        <span
+                                            aria-hidden="true"
+                                            className={
+                                                "pointer-events-none "
+                                                + "absolute bottom-3 "
+                                                + "right-3 w-9 h-9 "
+                                                + "rounded-full "
+                                                + "bg-blanco-calido/90 "
+                                                + "text-negro-elegante "
+                                                + "flex items-center "
+                                                + "justify-center "
+                                                + "opacity-0 "
+                                                + "group-hover:opacity-100 "
+                                                + "transition-opacity "
+                                                + "duration-300"
+                                            }
+                                        >
+                                            <ZoomIn size={16} />
+                                        </span>
                                         <div
                                             className={
                                                 "absolute top-4 left-4"
@@ -326,6 +381,10 @@ export default function PaginaServicios() {
                     )}
                 </div>
             </section>
+            <VisorImagen
+                imagen={visor}
+                onCerrar={() => setVisor(null)}
+            />
         </div>
     );
 }
