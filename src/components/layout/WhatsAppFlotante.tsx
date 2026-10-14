@@ -87,7 +87,8 @@ export default function WhatsAppFlotante() {
     const claseBoton =
         "relative w-14 h-14 bg-[#25D366] "
         + "rounded-full flex items-center "
-        + "justify-center shadow-lg "
+        + "justify-center shadow-elegante "
+        + "ring-4 ring-white/20 "
         + "hover:scale-110 "
         + "transition-transform duration-300";
 
@@ -109,25 +110,20 @@ export default function WhatsAppFlotante() {
             rel="noopener noreferrer"
             className={base + estado}
         >
-    <div className="relative">
-        <div className={
-            "absolute inset-0 bg-[#25D366] "
-            + "rounded-full animate-ping opacity-30"
-        }>
-        </div>
-        <div className={claseBoton}>
-            <svg
-                viewBox="0 0 24 24"
-                fill="white"
-                className="w-7 h-7"
-            >
-                <path d={icono} />
-            </svg>
-        </div>
-        <span className={claseTooltip}>
-            Escríbenos
-        </span>
-    </div>
-    </a >
-  );
+            <div className="relative">
+                <div className={claseBoton}>
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="white"
+                        className="w-7 h-7"
+                    >
+                        <path d={icono} />
+                    </svg>
+                </div>
+                <span className={claseTooltip}>
+                    Escríbenos
+                </span>
+            </div>
+        </a>
+    );
 }

@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import EncabezadoPagina
     from "@/components/ui/EncabezadoPagina";
 import Animado from "@/components/ui/Animado";
+import { imagenesCatalogo } from "@/data/imagenesCatalogo";
+import { imagenesServicios } from "@/data/imagenesServicios";
 import {
     crearReserva,
     getFechasOcupadas,
@@ -375,7 +377,10 @@ export default function PaginaCotizador() {
                                                 }
                                             >
                                                 <img
-                                                    src={producto.imagen}
+                                                    src={
+                                                        imagenesCatalogo[producto.nombre]
+                                                        ?? producto.imagen
+                                                    }
                                                     alt={producto.nombre}
                                                     className={
                                                         "w-20 h-20 "
@@ -499,7 +504,10 @@ export default function PaginaCotizador() {
                                                 }
                                             >
                                                 <img
-                                                    src={servicio.imagen}
+                                                    src={
+                                                        imagenesServicios[servicio.nombre]
+                                                        ?? servicio.imagen
+                                                    }
                                                     alt={servicio.nombre}
                                                     className={
                                                         "w-20 h-20 "

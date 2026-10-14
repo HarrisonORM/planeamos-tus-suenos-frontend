@@ -29,7 +29,7 @@ export default function Footer() {
 
     return (
         <footer
-            className={"bg-negro-elegante text-blanco-calido " + "pt-20 pb-8 mt-20"}
+            className={"bg-negro-elegante text-blanco-calido " + "pt-20 pb-8"}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div

@@ -618,8 +618,11 @@ export default function PaginaInicio() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className={
-                    "flex items-center gap-3 "
-                    + botonDurazno
+                    "inline-flex items-center "
+                    + "justify-center gap-3 "
+                    + botonDurazno.replace(
+                      "inline-block ", ""
+                    )
                   }
                 >
                   <svg
