@@ -5,6 +5,8 @@ import Animado from "@/components/ui/Animado";
 import EncabezadoPagina
     from "@/components/ui/EncabezadoPagina";
 import { getLocaciones } from "@/lib/api";
+import { imagenesLocaciones }
+    from "@/data/imagenesLocaciones";
 import { etiquetaTipoEvento } from "@/lib/utils";
 import { MapPin, Users } from "lucide-react";
 import type { LocacionEvento } from "@/types";
@@ -184,7 +186,11 @@ export default function PaginaLocaciones() {
                                     }
                                 >
                                     <img
-                                        src={loc.imagen}
+                                        src={
+                                            imagenesLocaciones[
+                                                loc.nombre
+                                            ] ?? loc.imagen
+                                        }
                                         alt={loc.nombre}
                                         className={
                                             "w-full h-full "
