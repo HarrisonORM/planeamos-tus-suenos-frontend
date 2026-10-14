@@ -16,6 +16,7 @@ import {
     formatearPrecio,
     etiquetaCategoria,
 } from "@/lib/utils";
+import { whatsappReservaUrl } from "@/lib/contacto";
 import type {
     RespuestaReserva,
     ProductoAlquiler,
@@ -70,6 +71,7 @@ export default function PaginaCotizador() {
     const [errorReserva, setErrorReserva] = useState("");
     const [reservaCreada, setReservaCreada] =
         useState<RespuestaReserva | null>(null);
+    const [enlaceWhatsapp, setEnlaceWhatsapp] = useState("");
 
     // Cargar datos del backend
     useEffect(() => {
@@ -155,6 +157,16 @@ export default function PaginaCotizador() {
                 })),
             });
             setReservaCreada(respuesta);
+            setEnlaceWhatsapp(whatsappReservaUrl([
+                "Hola, acabo de solicitar una reserva "
+                + `(#${respuesta.id}) en Planeamos Tus Sueños.`,
+                `Nombre: ${datosReserva.nombre_cliente}`,
+                `Fecha del evento: ${datosReserva.fecha_evento}`,
+                ...seleccionados.map(
+                    (item) => `- ${item.nombre} x${item.cantidad}`
+                ),
+                `Total estimado: ${formatearPrecio(respuesta.valor_total)}`,
+            ].join("\n")));
             setMostrarFormularioReserva(false);
         } catch (error) {
             setErrorReserva(
@@ -946,6 +958,30 @@ export default function PaginaCotizador() {
                                         confirmar disponibilidad y coordinar
                                         el anticipo. Por ahora no se
                                         realizan pagos en línea.
+                                    </p>
+                                    <a
+                                        href={enlaceWhatsapp}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={
+                                            "inline-flex items-center "
+                                            + "gap-2 mt-4 px-5 py-3 "
+                                            + "rounded-full bg-verde "
+                                            + "text-blanco-puro "
+                                            + "font-cuerpo text-sm "
+                                            + "font-medium"
+                                        }
+                                    >
+                                        <Send size={16} />
+                                        Enviar mi solicitud por WhatsApp
+                                    </a>
+                                    <p className={
+                                        "font-cuerpo text-xs "
+                                        + "text-gris-texto mt-2"
+                                    }>
+                                        Ya recibimos tu solicitud; este
+                                        mensaje nos ayuda a responderte
+                                        más rápido.
                                     </p>
                                 </div>
                             </div>
