@@ -118,6 +118,14 @@ export default function PaginaCotizador() {
         };
     }, []);
 
+    useEffect(() => {
+        if (!mostrarFormularioReserva) return;
+        document.getElementById("reserva-form")?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+        });
+    }, [mostrarFormularioReserva, cargandoFechas]);
+
     const fechaMinima = (() => {
         const hoy = new Date();
         const año = hoy.getFullYear();
