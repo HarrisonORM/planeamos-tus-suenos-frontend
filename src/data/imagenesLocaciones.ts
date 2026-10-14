@@ -9,8 +9,6 @@ export const imagenesLocaciones: Record<string, string> = {
     "Montana": ruta + "montana.webp",
     "Zelavi": ruta + "zelavi.jpg",
     "Granate Eventos": ruta + "granate.jpg",
-    "Hotel Lagoon Llanogrande":
-        ruta + "hotel-lagoon.webp",
-    "Imperial Eventos Campestre":
-        ruta + "imperial.jpg",
+    "Hotel Lagoon Llanogrande": ruta + "hotel-lagoon.webp",
+    "Imperial Eventos Campestre": ruta + "imperial.jpg",
 };
