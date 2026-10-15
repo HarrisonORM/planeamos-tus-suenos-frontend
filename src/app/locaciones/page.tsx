@@ -8,6 +8,7 @@ import Animado from "@/components/ui/Animado";
 import EncabezadoPagina
     from "@/components/ui/EncabezadoPagina";
 import { getLocaciones } from "@/lib/api";
+import { whatsappReservaUrl } from "@/lib/contacto";
 import { imagenesLocaciones }
     from "@/data/imagenesLocaciones";
 import { etiquetaTipoEvento } from "@/lib/utils";
@@ -349,18 +350,23 @@ export default function PaginaLocaciones() {
                                         >
                                             {loc.precio}
                                         </p>
-                                        <span
+                                        <a
+                                            href={whatsappReservaUrl(
+                                                "Hola, quiero más información "
+                                                + `sobre la locación ${loc.nombre}.`
+                                            )}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
                                             className={
                                                 "text-verde text-sm "
                                                 + "font-cuerpo "
                                                 + "font-medium "
                                                 + "hover:text-verde-oscuro "
-                                                + "transition-colors "
-                                                + "cursor-pointer"
+                                                + "transition-colors"
                                             }
                                         >
                                             Más info →
-                                        </span>
+                                        </a>
                                     </div>
                                 </div>
                             </div>

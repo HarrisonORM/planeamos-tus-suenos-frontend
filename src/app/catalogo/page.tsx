@@ -10,6 +10,7 @@ import VisorImagen, {
 } from "@/components/ui/VisorImagen";
 import { imagenesCatalogo } from "@/data/imagenesCatalogo";
 import { getProductos } from "@/lib/api";
+import BotonAgregar from "@/components/carrito/BotonAgregar";
 import {
     formatearPrecio,
     etiquetaCategoria,
@@ -371,18 +372,19 @@ export default function PaginaCatalogo() {
                                                     </span>
                                                 </p>
                                             </div>
-                                            <span
-                                                className={
-                                                    "text-verde text-sm "
-                                                    + "font-cuerpo "
-                                                    + "font-medium "
-                                                    + "hover:text-verde-oscuro "
-                                                    + "transition-colors "
-                                                    + "cursor-pointer"
-                                                }
-                                            >
-                                                Reservar →
-                                            </span>
+                                            <BotonAgregar
+                                                etiqueta="Reservar"
+                                                item={{
+                                                    id: producto.id,
+                                                    tipo: "producto",
+                                                    nombre: producto.nombre,
+                                                    precio: producto.precio,
+                                                    unidad: producto.unidad,
+                                                    imagen:
+                                                        imagenesCatalogo[producto.nombre]
+                                                        ?? producto.imagen,
+                                                }}
+                                            />
                                         </div>
                                     </div>
                                     </div>

@@ -3,6 +3,8 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import WhatsAppFlotante from "@/components/layout/WhatsAppFlotante";
+import CarritoFlotante from "@/components/carrito/CarritoFlotante";
+import { CarritoProvider } from "@/context/CarritoContext";
 
 // SEO
 export const metadata: Metadata = {
@@ -33,10 +35,13 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body>
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
-        <WhatsAppFlotante />
+        <CarritoProvider>
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+          <WhatsAppFlotante />
+          <CarritoFlotante />
+        </CarritoProvider>
       </body>
     </html>
   );

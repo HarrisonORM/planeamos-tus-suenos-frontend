@@ -9,6 +9,7 @@ import Animado from "@/components/ui/Animado";
 import EncabezadoPagina
     from "@/components/ui/EncabezadoPagina";
 import { getServicios } from "@/lib/api";
+import BotonAgregar from "@/components/carrito/BotonAgregar";
 import { imagenesServicios } from "@/data/imagenesServicios";
 import {
     formatearPrecio,
@@ -359,18 +360,19 @@ export default function PaginaServicios() {
                                                     </span>
                                                 </p>
                                             </div>
-                                            <span
-                                                className={
-                                                    "text-verde text-sm "
-                                                    + "font-cuerpo "
-                                                    + "font-medium "
-                                                    + "hover:text-verde-oscuro "
-                                                    + "transition-colors "
-                                                    + "cursor-pointer"
-                                                }
-                                            >
-                                                Contratar →
-                                            </span>
+                                            <BotonAgregar
+                                                etiqueta="Contratar"
+                                                item={{
+                                                    id: servicio.id,
+                                                    tipo: "servicio",
+                                                    nombre: servicio.nombre,
+                                                    precio: servicio.precio,
+                                                    unidad: servicio.unidad,
+                                                    imagen:
+                                                        imagenesServicios[servicio.nombre]
+                                                        ?? servicio.imagen,
+                                                }}
+                                            />
                                         </div>
                                     </div>
                                     </div>
